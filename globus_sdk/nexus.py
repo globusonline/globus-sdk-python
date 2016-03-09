@@ -19,7 +19,7 @@ class NexusClient(BaseClient):
         r = self.get('/goauth/token?grant_type=client_credentials',
                      auth=(username, password))
         try:
-            return r.json['access_token']
+            return r.json_body['access_token']
         except KeyError:
             raise GlobusError(r)
         else:
