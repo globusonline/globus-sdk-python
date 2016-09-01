@@ -116,7 +116,7 @@ class BaseClient(object):
     def qjoin_path(self, *parts):
         return "/" + "/".join(quote(part) for part in parts)
 
-    def get(self, path, params=None, headers=None, auth=None,
+    def get(self, path, params=None, headers=None, no_auth_header=False,
             response_class=None):
         """
         Make a GET request to the specified path.
@@ -124,7 +124,7 @@ class BaseClient(object):
         :param path: path for the request, with or without leading slash
         :param params: dict to be encoded as a query string
         :param headers: dict of HTTP headers to add to the request
-        :param auth: tuple of (user, password) for basic auth [DEPRECATED]
+        :param no_auth_header: When True, suppress the Authorization header
         :param response_class: class for response object, overrides the
                                client's ``default_response_class``
 
@@ -132,17 +132,18 @@ class BaseClient(object):
         <globus_sdk.response.GlobusHTTPResponse>` object
         """
         return self._request("GET", path, params=params, headers=headers,
-                             auth=auth, response_class=response_class)
+                             no_auth_header=no_auth_header,
+                             response_class=response_class)
 
     def post(self, path, json_body=None, params=None, headers=None,
-             text_body=None, auth=None, response_class=None):
+             text_body=None, no_auth_header=False, response_class=None):
         """
         Make a POST request to the specified path.
 
         :param path: path for the request, with or without leading slash
         :param params: dict to be encoded as a query string
         :param headers: dict of HTTP headers to add to the request
-        :param auth: tuple of (user, password) for basic auth [DEPRECATED]
+        :param no_auth_header: When True, suppress the Authorization header
         :param json_body: dict that will be encoded as a JSON request body
         :param text_body: raw string that will be the request body
         :param response_class: class for response object, overrides the
@@ -152,10 +153,11 @@ class BaseClient(object):
         <globus_sdk.response.GlobusHTTPResponse>` object
         """
         return self._request("POST", path, json_body=json_body, params=params,
-                             headers=headers, text_body=text_body, auth=auth,
-                             response_class=response_class)
+                             headers=headers, text_body=text_body,
+                             response_class=response_class,
+                             no_auth_header=no_auth_header)
 
-    def delete(self, path, params=None, headers=None, auth=None,
+    def delete(self, path, params=None, headers=None, no_auth_header=False,
                response_class=None):
         """
         Make a DELETE request to the specified path.
@@ -163,7 +165,7 @@ class BaseClient(object):
         :param path: path for the request, with or without leading slash
         :param params: dict to be encoded as a query string
         :param headers: dict of HTTP headers to add to the request
-        :param auth: tuple of (user, password) for basic auth [DEPRECATED]
+        :param no_auth_header: When True, suppress the Authorization header
         :param response_class: class for response object, overrides the
                                client's ``default_response_class``
 
@@ -171,18 +173,18 @@ class BaseClient(object):
         <globus_sdk.response.GlobusHTTPResponse>` object
         """
         return self._request("DELETE", path, params=params,
-                             headers=headers, auth=auth,
+                             headers=headers, no_auth_header=no_auth_header,
                              response_class=response_class)
 
     def put(self, path, json_body=None, params=None, headers=None,
-            text_body=None, auth=None, response_class=None):
+            text_body=None, no_auth_header=False, response_class=None):
         """
         Make a PUT request to the specified path.
 
         :param path: path for the request, with or without leading slash
         :param params: dict to be encoded as a query string
         :param headers: dict of HTTP headers to add to the request
-        :param auth: tuple of (user, password) for basic auth [DEPRECATED]
+        :param no_auth_header: When True, suppress the Authorization header
         :param json_body: dict that will be encoded as a JSON request body
         :param text_body: raw string that will be the request body
         :param response_class: class for response object, overrides the
@@ -192,18 +194,19 @@ class BaseClient(object):
         <globus_sdk.response.GlobusHTTPResponse>` object
         """
         return self._request("PUT", path, json_body=json_body, params=params,
-                             headers=headers, text_body=text_body, auth=auth,
+                             headers=headers, text_body=text_body,
+                             no_auth_header=no_auth_header,
                              response_class=response_class)
 
     def _request(self, method, path, params=None, headers=None,
-                 json_body=None, text_body=None, auth=None,
+                 json_body=None, text_body=None, no_auth_header=False,
                  response_class=None):
         """
         :param method: HTTP request method, as an all caps string
         :param path: path for the request, with or without leading slash
         :param headers: dict containing additional headers for the request
         :param params: dict to be encoded as a query string
-        :param auth: tuple of (user, password) for basic auth [DEPRECATED]
+        :param no_auth_header: When True, suppress the Authorization header
         :param json_body: dict that will be encoded as a JSON request body
         :param text_body: raw string that will be the request body
         :param response_class: class for response object, overrides the
@@ -215,9 +218,19 @@ class BaseClient(object):
         if json_body is not None:
             assert text_body is None
             text_body = json.dumps(json_body)
+
+        # copy
         rheaders = dict(self._headers)
+        # expand
         if headers is not None:
             rheaders.update(headers)
+        # trim
+        if no_auth_header:
+            try:
+                del rheaders['Authorization']
+            except KeyError:
+                pass
+
         url = slash_join(self.base_url, path)
         try:
             r = self._session.request(method=method,
@@ -225,8 +238,7 @@ class BaseClient(object):
                                       headers=rheaders,
                                       params=params,
                                       data=text_body,
-                                      verify=self._verify,
-                                      auth=auth)
+                                      verify=self._verify)
         except requests.Timeout as e:
             raise exc.TimeoutError(*e.args)
         except requests.ConnectionError as e:
