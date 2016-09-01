@@ -45,9 +45,6 @@ class AuthClient(BaseClient):
         Set the Globus Auth Client ID on this ``AuthClient``.
         This is used as a default in several methods that accept a
         ``client_id`` parameter on the ``AuthClient``.
-
-        For example,
-        :meth:`~globus_sdk.AuthClient.oauth2_native_app_get_authorize_url`
         """
         self.client_id = client_id
 
@@ -99,19 +96,22 @@ class AuthClient(BaseClient):
 
     def oauth2_native_app_start_flow(
             self, client_id=None, requested_scopes=None, redirect_uri=None,
-            state='_default', verifier=None, refresh_token=False):
+            state='_default', verifier=None, refresh_tokens=False):
         """
         Starts a Native App OAuth2 flow by instantiating a
         :class:`GlobusNativeAppFlowManager
-        <globus_sdk.auth.oauth2_native_app.GlobusNativeAppFlowManager>`
+        <globus_sdk.auth.GlobusNativeAppFlowManager>`
 
         All of the parameters to this method are passed to that class's
         initializer verbatim.
+
+        #notthreadsafe
         """
         self.current_oauth2_flow_manager = GlobusNativeAppFlowManager(
             self, client_id=client_id, requested_scopes=requested_scopes,
             redirect_uri=redirect_uri, state=state, verifier=verifier,
-            refresh_token=refresh_token)
+            refresh_tokens=refresh_tokens)
+        return self.current_oauth2_flow_manager
 
     def oauth2_get_authorize_url(self):
         """
@@ -132,7 +132,8 @@ class AuthClient(BaseClient):
         """
         Exchange an authorization code for a token or tokens.
 
-        :rtype: ``dict`` or ``dict``-like
+        :rtype: :class:`GlobusOAuthTokenResponse \
+        <globus_sdk.auth.token_response.GlobusOAuthTokenResponse>`
 
         :param auth_code: An auth code typically obtained by sending the user
                           to the authorize URL. This is a very short-lived

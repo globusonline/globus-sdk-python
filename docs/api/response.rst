@@ -30,3 +30,8 @@ Response Classes
    :members:
    :inherited-members:
    :show-inheritance:
+
+.. autoclass:: globus_sdk.auth.token_response.GlobusOAuthTokenResponse
+   :members:
+   :inherited-members:
+   :show-inheritance:
