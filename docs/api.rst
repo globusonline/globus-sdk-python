@@ -30,9 +30,8 @@ Transfer Client
 
 .. autoclass:: globus_sdk.TransferClient
    :members:
-   :member-order: bysource
-   :inherited-members:
    :show-inheritance:
+   :member-order: bysource
    :exclude-members: error_class, default_response_class
 
 Helper Objects
@@ -58,7 +57,6 @@ Auth Client
 
 .. autoclass:: globus_sdk.AuthClient
    :members:
-   :member-order: bysource
-   :inherited-members:
    :show-inheritance:
+   :member-order: bysource
    :exclude-members: error_class, default_response_class
