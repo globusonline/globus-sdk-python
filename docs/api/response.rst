@@ -18,15 +18,16 @@ Response Classes
 
 .. autoclass:: globus_sdk.response.GlobusHTTPResponse
    :members:
-   :inherited-members:
    :show-inheritance:
 
 .. autoclass:: globus_sdk.transfer.response.TransferResponse
    :members:
-   :inherited-members:
    :show-inheritance:
 
 .. autoclass:: globus_sdk.transfer.response.IterableTransferResponse
    :members:
-   :inherited-members:
+   :show-inheritance:
+
+.. autoclass:: globus_sdk.auth.token_response.GlobusOAuthTokenResponse
+   :members:
    :show-inheritance:

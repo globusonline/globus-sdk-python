@@ -141,7 +141,7 @@ class TransferClient(BaseClient):
         :rtype: iterable of :class:`GlobusResponse
                 <globus_sdk.response.GlobusResponse>`
         """
-        path = self.qjoin_path('endpoint_manager','monitored_endpoints')
+        path = self.qjoin_path('endpoint_manager', 'monitored_endpoints')
         return self.get(path, params=params,
                         response_class=IterableTransferResponse)
 
@@ -832,7 +832,7 @@ class TransferClient(BaseClient):
         :rtype: iterable of :class:`GlobusResponse
                 <globus_sdk.response.GlobusResponse>`
         """
-        path = self.qjoin_path('endpoint_manager','task_list')
+        path = self.qjoin_path('endpoint_manager', 'task_list')
         return PaginatedResource(
             self.get, path, {'params': params},
             num_results=num_results, max_results_per_call=1000,

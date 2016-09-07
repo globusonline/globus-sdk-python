@@ -49,6 +49,12 @@ class GlobusResponse(object):
         """
         return self._data
 
+    def get(self, *args, **kwargs):
+        """
+        ``GlobusResponse.get`` is just an alias for ``GlobusResponse.data.get``
+        """
+        return self.data.get(*args, **kwargs)
+
 
 class GlobusHTTPResponse(GlobusResponse):
     """
