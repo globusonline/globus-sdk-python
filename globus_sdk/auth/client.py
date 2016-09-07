@@ -5,6 +5,8 @@ from six.moves.urllib.parse import urlencode
 from globus_sdk import config
 from globus_sdk.base import BaseClient, merge_params
 from globus_sdk.auth.oauth2_native_app import GlobusNativeAppFlowManager
+from globus_sdk.auth.token_response import (
+    GlobusOAuthTokenResponse)
 
 
 class AuthClient(BaseClient):
@@ -94,7 +96,7 @@ class AuthClient(BaseClient):
         return self.post("/v2/oauth2/token/introspect",
                          text_body=urlencode(kw))
 
-    def oauth2_native_app_start_flow(
+    def oauth2_start_flow_native_app(
             self, client_id=None, requested_scopes=None, redirect_uri=None,
             state='_default', verifier=None, refresh_tokens=False):
         """
@@ -148,3 +150,47 @@ class AuthClient(BaseClient):
 
         return self.current_oauth2_flow_manager.exchange_code_for_tokens(
             auth_code)
+
+    def oauth2_refresh_token(self, refresh_token, native_app=False,
+                             **additional_params):
+        r"""
+        Exchange a refresh token for a :class:`GlobusOAuthTokenResponse
+        <globus_sdk.auth.token_response.GlobusOAuthTokenResponse>`, containing
+        an access token.
+
+        When ``native_app`` is set, includes a client ID in the form body and
+        suppresses the authorization header. When it is false (default), the
+        body is of the typical form
+          refresh_token=<refresh_token>
+          grant_type=refresh_token
+        """
+        form_data = {'refresh_token': refresh_token,
+                     'grant_type': 'refresh_token'}
+        form_data.update(additional_params)
+
+        if native_app:
+            form_data.update({'client_id': self.client_id})
+            return self.oauth2_token(form_data, no_auth_header=True)
+        else:
+            return self.oauth2_token(form_data)
+
+    def oauth2_token(self, form_data, no_auth_header=False):
+        """
+        This is the generic form of calling the OAuth2 Token endpoint.
+        It takes ``form_data``, a dict which will be encoded in a form POST
+        body on the request, and may suppress the Authorization header to allow
+        flexibility when the governing ``AuthClient`` has credentials that
+        could impede an OAuth2 flow.
+
+        Generally, users of the SDK should not call this method unless they are
+        implementing OAuth2 flows.
+
+        :rtype: :class:`GlobusOAuthTokenResponse \
+        <globus_sdk.auth.token_response.GlobusOAuthTokenResponse>`
+        """
+        # use the fact that requests implicitly encodes the `data` parameter as
+        # a form POST
+        return self.post(
+            '/v2/oauth2/token', response_class=GlobusOAuthTokenResponse,
+            text_body=form_data,
+            no_auth_header=no_auth_header)

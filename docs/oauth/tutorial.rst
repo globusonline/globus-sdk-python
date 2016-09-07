@@ -67,7 +67,7 @@ The shortest version of this flow looks like this:
     import globus-sdk
     # include your client_id, of course
     client = globus_sdk.AuthClient(client_id=...)
-    client.oauth2_native_app_start_flow()
+    client.oauth2_start_flow_native_app()
 
     authorize_url = client.oauth2_get_authorize_url()
     print('Please go to this URL and login: {0}'.format(authorize_url))
@@ -130,7 +130,7 @@ Maybe you're only specifying ``refresh_tokens`` explicitly:
 
 .. code-block:: python
 
-    client.oauth2_native_app_start_flow(refresh_tokens=True)
+    client.oauth2_start_flow_native_app(refresh_tokens=True)
 
 With the Native App flow started, you can generate an ``authorize URL`` with
 its various encoded parameters.

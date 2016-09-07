@@ -5,8 +5,6 @@ from six.moves.urllib.parse import urlencode
 
 from globus_sdk.base import slash_join
 from globus_sdk.auth.oauth_flow_manager import GlobusOAuthFlowManager
-from globus_sdk.auth.token_response import (
-    GlobusOAuthTokenResponse)
 
 
 def make_native_app_challenge(verifier=None):
@@ -144,14 +142,10 @@ class GlobusNativeAppFlowManager(GlobusOAuthFlowManager):
         :rtype: :class:`GlobusOAuthTokenResponse \
         <globus_sdk.auth.token_response.GlobusOAuthTokenResponse>`
         """
-        # use the fact that requests implicitly encodes the `data` parameter as
-        # a form POST
-        return self.auth_client.post(
-            '/v2/oauth2/token', response_class=GlobusOAuthTokenResponse,
-            text_body={'client_id': self.client_id,
-                       'grant_type': 'authorization_code',
-                       'code': auth_code.encode('utf-8'),
-                       'code_verifier': self.verifier,
-                       'redirect_uri': self.redirect_uri},
-            no_auth_header=True
-            )
+        return self.auth_client.oauth2_token(
+            {'client_id': self.client_id,
+             'grant_type': 'authorization_code',
+             'code': auth_code.encode('utf-8'),
+             'code_verifier': self.verifier,
+             'redirect_uri': self.redirect_uri},
+            no_auth_header=True)
