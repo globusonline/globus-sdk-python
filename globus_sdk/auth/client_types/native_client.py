@@ -46,7 +46,8 @@ class NativeAppAuthClient(AuthClient):
 
     def oauth2_start_flow(
             self, requested_scopes=None, redirect_uri=None,
-            state='_default', verifier=None, refresh_tokens=False):
+            state='_default', verifier=None, refresh_tokens=False,
+            prefill_named_grant=None):
         """
         Starts a Native App OAuth2 flow by instantiating a
         :class:`GlobusNativeAppFlowManager
@@ -61,7 +62,8 @@ class NativeAppAuthClient(AuthClient):
         self.current_oauth2_flow_manager = GlobusNativeAppFlowManager(
             self, requested_scopes=requested_scopes,
             redirect_uri=redirect_uri, state=state, verifier=verifier,
-            refresh_tokens=refresh_tokens)
+            refresh_tokens=refresh_tokens,
+            prefill_named_grant=prefill_named_grant)
         return self.current_oauth2_flow_manager
 
     def oauth2_refresh_token(self, refresh_token):

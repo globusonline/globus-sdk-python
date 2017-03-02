@@ -30,7 +30,6 @@ SDKTESTER1A_NATIVE1_ID_TOKEN = (
 SDKTESTER1A_ID_ACCESS_TOKEN = (
     "AQBYuuk5AAAAAAAEgv9acyfVlpa9Jhe3A1LhzhzofL"
     "tYuM3-yBKxA7yZ6QAN9tosD4xRsxwaQ35pUXGM7dCj")
-
 # ---------- #
 # end tokens #
 # ---------- #

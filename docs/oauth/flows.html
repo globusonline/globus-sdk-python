@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>OAuth Flows &mdash; globus-sdk-python 0.5.0 documentation</title>
+    <title>OAuth Flows &mdash; globus-sdk-python 0.5.1 documentation</title>
     
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.5.0',
+        VERSION:     '0.5.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="globus-sdk-python 0.5.0 documentation" href="../index.html" />
+    <link rel="top" title="globus-sdk-python 0.5.1 documentation" href="../index.html" />
     <link rel="up" title="Globus Auth / OAuth2" href="../oauth.html" />
     <link rel="next" title="Resouce Servers and Scopes" href="resource_servers.html" />
     <link rel="prev" title="Globus Auth / OAuth2" href="../oauth.html" /> 
@@ -44,7 +44,7 @@
         <li class="right" >
           <a href="../oauth.html" title="Globus Auth / OAuth2"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">globus-sdk-python 0.5.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">globus-sdk-python 0.5.1 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../oauth.html" accesskey="U">Globus Auth / OAuth2</a> &raquo;</li> 
       </ul>
     </div>  
@@ -135,7 +135,7 @@ the specific flow manager instance which is generating it.</p>
 
 <dl class="class">
 <dt id="globus_sdk.auth.GlobusNativeAppFlowManager">
-<em class="property">class </em><code class="descclassname">globus_sdk.auth.</code><code class="descname">GlobusNativeAppFlowManager</code><span class="sig-paren">(</span><em>auth_client</em>, <em>requested_scopes=None</em>, <em>redirect_uri=None</em>, <em>state='_default'</em>, <em>verifier=None</em>, <em>refresh_tokens=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/globus_sdk/auth/oauth2_native_app.html#GlobusNativeAppFlowManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#globus_sdk.auth.GlobusNativeAppFlowManager" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">globus_sdk.auth.</code><code class="descname">GlobusNativeAppFlowManager</code><span class="sig-paren">(</span><em>auth_client</em>, <em>requested_scopes=None</em>, <em>redirect_uri=None</em>, <em>state='_default'</em>, <em>verifier=None</em>, <em>refresh_tokens=False</em>, <em>prefill_named_grant=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/globus_sdk/auth/oauth2_native_app.html#GlobusNativeAppFlowManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#globus_sdk.auth.GlobusNativeAppFlowManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#globus_sdk.auth.oauth_flow_manager.GlobusOAuthFlowManager" title="globus_sdk.auth.oauth_flow_manager.GlobusOAuthFlowManager"><code class="xref py py-class docutils literal"><span class="pre">globus_sdk.auth.oauth_flow_manager.GlobusOAuthFlowManager</span></code></a></p>
 <p>This is the OAuth flow designated for use by clients wishing to
 authenticate users in the absence of a Client Secret. Because these
@@ -151,9 +151,9 @@ attempt.</p>
 used to extract default values for the flow, and also to make calls
 to the Auth service. This SHOULD be a <code class="docutils literal"><span class="pre">NativeAppAuthClient</span></code></dd>
 <dt><code class="docutils literal"><span class="pre">requested_scopes</span></code> (<em>string</em>)</dt>
-<dd>The scopes on the token(s) being requested. Defaults to a set of
-commonly desired scopes for Globus. Given as a space-separated
-string</dd>
+<dd>The scopes on the token(s) being requested, as a space-separated
+string. Defaults to <code class="docutils literal"><span class="pre">openid</span> <span class="pre">profile</span> <span class="pre">email</span>
+<span class="pre">urn:globus:auth:scope:transfer.api.globus.org:all</span></code></dd>
 <dt><code class="docutils literal"><span class="pre">redirect_uri</span></code> (<em>string</em>)</dt>
 <dd>The page that users should be directed to after authenticating at the
 authorize URL. Defaults to
@@ -171,7 +171,10 @@ information to that page. It defaults to the string &#8216;_default&#8217;</dd>
 freshly generated random string, known only to this
 <code class="docutils literal"><span class="pre">GlobusNativeAppFlowManager</span></code> instance</dd>
 <dt><code class="docutils literal"><span class="pre">refresh_tokens</span></code> (<em>bool</em>)</dt>
-<dd>When True, request refresh tokens in addition to access tokens</dd>
+<dd><p class="first">When True, request refresh tokens in addition to access tokens</p>
+<p class="last"><code class="docutils literal"><span class="pre">prefill_named_grant</span></code> (<em>string</em>)
+Optionally prefill the named grant label on the consent page</p>
+</dd>
 </dl>
 </div></blockquote>
 <dl class="method">
@@ -245,9 +248,9 @@ also to make calls to the Auth service. It MUST be a
 <dd>The page that users should be directed to after authenticating at the
 authorize URL. Required.</dd>
 <dt><code class="docutils literal"><span class="pre">requested_scopes</span></code> (<em>string</em>)</dt>
-<dd>The scopes on the token(s) being requested. Defaults to a set of
-commonly desired scopes for Globus. Given as a space-separated
-string</dd>
+<dd>The scopes on the token(s) being requested, as a space-separated
+string. Defaults to <code class="docutils literal"><span class="pre">openid</span> <span class="pre">profile</span> <span class="pre">email</span>
+<span class="pre">urn:globus:auth:scope:transfer.api.globus.org:all</span></code></dd>
 <dt><code class="docutils literal"><span class="pre">state</span></code> (<em>string</em>)</dt>
 <dd>This is a way of your application passing information back to itself
 in the course of the OAuth flow. Because the user will navigate away
@@ -362,7 +365,7 @@ with the <code class="docutils literal"><span class="pre">auth_code</span></code
         <li class="right" >
           <a href="../oauth.html" title="Globus Auth / OAuth2"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">globus-sdk-python 0.5.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">globus-sdk-python 0.5.1 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../oauth.html" >Globus Auth / OAuth2</a> &raquo;</li> 
       </ul>
     </div>

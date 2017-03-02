@@ -52,9 +52,9 @@ class GlobusNativeAppFlowManager(GlobusOAuthFlowManager):
           to the Auth service. This SHOULD be a ``NativeAppAuthClient``
 
         ``requested_scopes`` (*string*)
-          The scopes on the token(s) being requested. Defaults to a set of
-          commonly desired scopes for Globus. Given as a space-separated
-          string
+          The scopes on the token(s) being requested, as a space-separated
+          string. Defaults to ``openid profile email
+          urn:globus:auth:scope:transfer.api.globus.org:all``
 
         ``redirect_uri`` (*string*)
           The page that users should be directed to after authenticating at the
@@ -77,11 +77,14 @@ class GlobusNativeAppFlowManager(GlobusOAuthFlowManager):
 
         ``refresh_tokens`` (*bool*)
           When True, request refresh tokens in addition to access tokens
+
+          ``prefill_named_grant`` (*string*)
+          Optionally prefill the named grant label on the consent page
     """
 
     def __init__(self, auth_client, requested_scopes=None,
                  redirect_uri=None, state='_default', verifier=None,
-                 refresh_tokens=False):
+                 refresh_tokens=False, prefill_named_grant=None):
         self.auth_client = auth_client
 
         # set client_id, then check for validity
@@ -109,6 +112,7 @@ class GlobusNativeAppFlowManager(GlobusOAuthFlowManager):
         # store the remaining parameters directly, with no transformation
         self.refresh_tokens = refresh_tokens
         self.state = state
+        self.prefill_named_grant = prefill_named_grant
 
         logger.debug('Starting Native App Flow with params:')
         logger.debug('auth_client.client_id={}'.format(auth_client.client_id))
@@ -117,6 +121,10 @@ class GlobusNativeAppFlowManager(GlobusOAuthFlowManager):
         logger.debug('state={}'.format(state))
         logger.debug('requested_scopes={}'.format(self.requested_scopes))
         logger.debug('verifier=<REDACTED>,challenge={}'.format(self.challenge))
+
+        if prefill_named_grant is not None:
+            logger.debug('prefill_named_grant={}'.format(
+                self.prefill_named_grant))
 
     def get_authorize_url(self, additional_params=None):
         """
@@ -153,6 +161,8 @@ class GlobusNativeAppFlowManager(GlobusOAuthFlowManager):
             'code_challenge_method': 'S256',
             'access_type': (self.refresh_tokens and 'offline') or 'online'
         }
+        if self.prefill_named_grant is not None:
+            params['prefill_named_grant'] = self.prefill_named_grant
         if additional_params:
             params.update(additional_params)
 

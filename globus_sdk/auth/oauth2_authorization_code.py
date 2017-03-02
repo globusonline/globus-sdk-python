@@ -35,9 +35,9 @@ class GlobusAuthorizationCodeFlowManager(GlobusOAuthFlowManager):
           authorize URL. Required.
 
         ``requested_scopes`` (*string*)
-          The scopes on the token(s) being requested. Defaults to a set of
-          commonly desired scopes for Globus. Given as a space-separated
-          string
+          The scopes on the token(s) being requested, as a space-separated
+          string. Defaults to ``openid profile email
+          urn:globus:auth:scope:transfer.api.globus.org:all``
 
         ``state`` (*string*)
           This is a way of your application passing information back to itself

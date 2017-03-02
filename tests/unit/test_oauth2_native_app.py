@@ -81,6 +81,27 @@ class GlobusNativeAppFlowManagerTests(CapturedIOTestCase):
         for param, value in params.items():
             self.assertIn(param + "=" + value, param_url)
 
+    def test_prefill_named_grant(self):
+        """
+        Should add the `prefill_named_grant` query string parameter
+        to the authorize url.
+        """
+        flow_with_prefill = globus_sdk.auth.GlobusNativeAppFlowManager(
+            self.ac, requested_scopes="scopes", redirect_uri="uri",
+            state="state", verifier="verifier", prefill_named_grant="test")
+
+        authorize_url = flow_with_prefill.get_authorize_url()
+
+        self.assertIn('prefill_named_grant=test', authorize_url)
+
+        flow_without_prefill = globus_sdk.auth.GlobusNativeAppFlowManager(
+            self.ac, requested_scopes="scopes", redirect_uri="uri",
+            state="state", verifier="verifier")
+
+        authorize_url = flow_without_prefill.get_authorize_url()
+
+        self.assertNotIn('prefill_named_grant=', authorize_url)
+
     def test_exchange_code_for_tokens(self):
         """
         Makes a token exchange with the mock AuthClient,

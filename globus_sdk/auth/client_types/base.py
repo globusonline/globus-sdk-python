@@ -51,7 +51,8 @@ class AuthClient(BaseClient):
 
         BaseClient.__init__(self, "auth", authorizer=authorizer, **kwargs)
 
-    def get_identities(self, usernames=None, ids=None, **params):
+    def get_identities(self, usernames=None, ids=None,
+                       provision=False, **params):
         r"""
         GET /v2/api/identities
 
@@ -61,6 +62,9 @@ class AuthClient(BaseClient):
         ``<U>`` and ``<I>`` in this case are comma-delimited strings listing
         multiple Identity Usernames or Identity IDs, or iterables of strings,
         each of which is an Identity Username or Identity ID.
+
+        If Globus Auth's identity auto-provisioning behavior is desired,
+        ``provision=True`` may be specified.
 
         Available with any authentication/client type.
 
@@ -123,6 +127,8 @@ class AuthClient(BaseClient):
         # most notably, lets `ids` take a single UUID object safely
         if usernames:
             params['usernames'] = _convert_listarg(usernames)
+            params['provision'] = ('false' if str(provision).lower() == 'false'
+                                   else 'true')
         if ids:
             params['ids'] = _convert_listarg(ids)
 

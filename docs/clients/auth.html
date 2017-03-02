@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Auth Client &mdash; globus-sdk-python 0.5.0 documentation</title>
+    <title>Auth Client &mdash; globus-sdk-python 0.5.1 documentation</title>
     
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.5.0',
+        VERSION:     '0.5.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="globus-sdk-python 0.5.0 documentation" href="../index.html" />
+    <link rel="top" title="globus-sdk-python 0.5.1 documentation" href="../index.html" />
     <link rel="up" title="Service Clients" href="../clients.html" />
     <link rel="next" title="Low Level API" href="base.html" />
     <link rel="prev" title="Transfer Client" href="transfer.html" /> 
@@ -44,7 +44,7 @@
         <li class="right" >
           <a href="transfer.html" title="Transfer Client"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">globus-sdk-python 0.5.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">globus-sdk-python 0.5.1 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../clients.html" accesskey="U">Service Clients</a> &raquo;</li> 
       </ul>
     </div>  
@@ -183,7 +183,7 @@ authenticate against Globus APIs.</dd>
 
 <dl class="method">
 <dt id="globus_sdk.AuthClient.oauth2_refresh_token">
-<code class="descname">oauth2_refresh_token</code><span class="sig-paren">(</span><em>refresh_token</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/globus_sdk/auth/client_types/base.html#AuthClient.oauth2_refresh_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#globus_sdk.AuthClient.oauth2_refresh_token" title="Permalink to this definition">¶</a></dt>
+<code class="descname">oauth2_refresh_token</code><span class="sig-paren">(</span><em>refresh_token</em>, <em>additional_params=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/globus_sdk/auth/client_types/base.html#AuthClient.oauth2_refresh_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#globus_sdk.AuthClient.oauth2_refresh_token" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exchange a refresh token for a <a class="reference internal" href="../responses.html#globus_sdk.auth.token_response.OAuthTokenResponse" title="globus_sdk.auth.token_response.OAuthTokenResponse"><code class="xref py py-class docutils literal"><span class="pre">OAuthTokenResponse</span></code></a>, containing
 an access token.</p>
 <p>Does a token call of the form</p>
@@ -305,7 +305,7 @@ constructor.</p>
 
 <dl class="method">
 <dt id="globus_sdk.NativeAppAuthClient.oauth2_start_flow">
-<code class="descname">oauth2_start_flow</code><span class="sig-paren">(</span><em>requested_scopes=None</em>, <em>redirect_uri=None</em>, <em>state='_default'</em>, <em>verifier=None</em>, <em>refresh_tokens=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/globus_sdk/auth/client_types/native_client.html#NativeAppAuthClient.oauth2_start_flow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#globus_sdk.NativeAppAuthClient.oauth2_start_flow" title="Permalink to this definition">¶</a></dt>
+<code class="descname">oauth2_start_flow</code><span class="sig-paren">(</span><em>requested_scopes=None</em>, <em>redirect_uri=None</em>, <em>state='_default'</em>, <em>verifier=None</em>, <em>refresh_tokens=False</em>, <em>prefill_named_grant=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/globus_sdk/auth/client_types/native_client.html#NativeAppAuthClient.oauth2_start_flow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#globus_sdk.NativeAppAuthClient.oauth2_start_flow" title="Permalink to this definition">¶</a></dt>
 <dd><p>Starts a Native App OAuth2 flow by instantiating a
 <a class="reference internal" href="../oauth/flows.html#globus_sdk.auth.GlobusNativeAppFlowManager" title="globus_sdk.auth.GlobusNativeAppFlowManager"><code class="xref py py-class docutils literal"><span class="pre">GlobusNativeAppFlowManager</span></code></a></p>
 <p>All of the parameters to this method are passed to that class&#8217;s
@@ -505,7 +505,7 @@ in the API documentation for details.</p>
         <li class="right" >
           <a href="transfer.html" title="Transfer Client"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">globus-sdk-python 0.5.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">globus-sdk-python 0.5.1 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../clients.html" >Service Clients</a> &raquo;</li> 
       </ul>
     </div>

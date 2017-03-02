@@ -2,7 +2,6 @@ import requests
 import json
 import six
 import time
-<<<<<<< HEAD
 
 try:
     import jose
@@ -26,7 +25,6 @@ class OAuthTokenResponseTests(CapturedIOTestCase):
 
     def setUp(self):
         """
-<<<<<<< HEAD
         Creates a OAuthTokenResponse object with known data for testing
         Sets up mock AuthClient for decoding id_tokens
         """
@@ -47,24 +45,6 @@ class OAuthTokenResponseTests(CapturedIOTestCase):
             "refresh_token": "RT3", "other_tokens": [], "token_type": "3",
             "id_token": SDKTESTER1A_NATIVE1_ID_TOKEN,
             "access_token": "invalid_access_token"}
-=======
-        Creates a OAuthTokenResponse with known data for testing
-        """
-        super(OAuthTokenResponseTests, self).setUp()
-        # known token data for testing expected values
-        self.top_token = {
-            "resource_server": "server1", "expires_in": 10, "scope": "scope1",
-            "access_token": "AT1", "refresh_token": "RT1", "other_tokens": [],
-            "token_type": "1", "id_token": "invalid_id_token"}
-        self.other_token1 = {
-            "resource_server": "server2", "expires_in": 20, "scope": "scope2",
-            "access_token": "AT2", "refresh_token": "RT2", "other_tokens": [],
-            "token_type": "2"}
-        self.other_token2 = {
-            "resource_server": "server3", "expires_in": 30, "scope": "scope3",
-            "access_token": "AT3", "refresh_token": "RT3", "other_tokens": [],
-            "token_type": "3"}
->>>>>>> a3b59bc33b70857a7f088dbabfba3bbb37736285
         self.top_token["other_tokens"] = [self.other_token1, self.other_token2]
 
         # create the response
@@ -73,7 +53,6 @@ class OAuthTokenResponseTests(CapturedIOTestCase):
         http_response.headers["Content-Type"] = "application/json"
         self.response = OAuthTokenResponse(http_response)
 
-<<<<<<< HEAD
         # mock AuthClient
         self.ac = mock.Mock()
         self.ac.client_id = get_client_data()["native_app_client1"]["id"]
@@ -81,8 +60,6 @@ class OAuthTokenResponseTests(CapturedIOTestCase):
             "jwks_uri":
             u"https://auth.globus.org/jwk.json"})
 
-=======
->>>>>>> a3b59bc33b70857a7f088dbabfba3bbb37736285
     def test_convert_token_info_dict(self):
         """
         Converts known info dicts to confirm expected results
@@ -183,7 +160,6 @@ class OAuthTokenResponseTests(CapturedIOTestCase):
         self.assertEqual(self.response.other_tokens,
                          self.top_token["other_tokens"])
 
-<<<<<<< HEAD
     def test_decode_id_token_no_jose(self):
         """
         If jose was not imported, confirms OptionalDependencyError
@@ -243,22 +219,6 @@ class OAuthTokenResponseTests(CapturedIOTestCase):
             decoded = self.response.decode_id_token(self.ac)
             self.assertIn("exp", decoded)
     '''
-=======
-    def test_decode_id_token(self):
-        """
-        Mocks out auth_client to attempt a decode with,
-        confirms the invalid auth client and code error out.
-        Further testing done in integration tests
-        """
-        ac = mock.Mock()
-        ac.client_id = "id"
-        ac.get = mock.Mock(return_value={
-            "jwks_uri":
-            u"https://auth.globus.org/jwk.json"})
-
-        with self.assertRaises(GlobusOptionalDependencyError):
-            self.response.decode_id_token(ac)
->>>>>>> a3b59bc33b70857a7f088dbabfba3bbb37736285
 
 
 class OAuthDependentTokenResponseTests(CapturedIOTestCase):

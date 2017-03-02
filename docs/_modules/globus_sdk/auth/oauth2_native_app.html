@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>globus_sdk.auth.oauth2_native_app &mdash; globus-sdk-python 0.5.0 documentation</title>
+    <title>globus_sdk.auth.oauth2_native_app &mdash; globus-sdk-python 0.5.1 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '0.5.0',
+        VERSION:     '0.5.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="globus-sdk-python 0.5.0 documentation" href="../../../index.html" />
+    <link rel="top" title="globus-sdk-python 0.5.1 documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" /> 
   </head>
   <body role="document">
@@ -36,7 +36,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">globus-sdk-python 0.5.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">globus-sdk-python 0.5.1 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -101,9 +101,9 @@
 <span class="sd">          to the Auth service. This SHOULD be a ``NativeAppAuthClient``</span>
 
 <span class="sd">        ``requested_scopes`` (*string*)</span>
-<span class="sd">          The scopes on the token(s) being requested. Defaults to a set of</span>
-<span class="sd">          commonly desired scopes for Globus. Given as a space-separated</span>
-<span class="sd">          string</span>
+<span class="sd">          The scopes on the token(s) being requested, as a space-separated</span>
+<span class="sd">          string. Defaults to ``openid profile email</span>
+<span class="sd">          urn:globus:auth:scope:transfer.api.globus.org:all``</span>
 
 <span class="sd">        ``redirect_uri`` (*string*)</span>
 <span class="sd">          The page that users should be directed to after authenticating at the</span>
@@ -126,11 +126,14 @@
 
 <span class="sd">        ``refresh_tokens`` (*bool*)</span>
 <span class="sd">          When True, request refresh tokens in addition to access tokens</span>
+
+<span class="sd">          ``prefill_named_grant`` (*string*)</span>
+<span class="sd">          Optionally prefill the named grant label on the consent page</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">auth_client</span><span class="p">,</span> <span class="n">requested_scopes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                  <span class="n">redirect_uri</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s1">&#39;_default&#39;</span><span class="p">,</span> <span class="n">verifier</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                 <span class="n">refresh_tokens</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+                 <span class="n">refresh_tokens</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">prefill_named_grant</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">auth_client</span> <span class="o">=</span> <span class="n">auth_client</span>
 
         <span class="c1"># set client_id, then check for validity</span>
@@ -158,6 +161,7 @@
         <span class="c1"># store the remaining parameters directly, with no transformation</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">refresh_tokens</span> <span class="o">=</span> <span class="n">refresh_tokens</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prefill_named_grant</span> <span class="o">=</span> <span class="n">prefill_named_grant</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Starting Native App Flow with params:&#39;</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;auth_client.client_id={}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">auth_client</span><span class="o">.</span><span class="n">client_id</span><span class="p">))</span>
@@ -166,6 +170,10 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;state={}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">state</span><span class="p">))</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;requested_scopes={}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">requested_scopes</span><span class="p">))</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;verifier=&lt;REDACTED&gt;,challenge={}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">challenge</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">prefill_named_grant</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;prefill_named_grant={}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">prefill_named_grant</span><span class="p">))</span>
 
 <div class="viewcode-block" id="GlobusNativeAppFlowManager.get_authorize_url"><a class="viewcode-back" href="../../../oauth/flows.html#globus_sdk.auth.GlobusNativeAppFlowManager.get_authorize_url">[docs]</a>    <span class="k">def</span> <span class="nf">get_authorize_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">additional_params</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -202,6 +210,8 @@
             <span class="s1">&#39;code_challenge_method&#39;</span><span class="p">:</span> <span class="s1">&#39;S256&#39;</span><span class="p">,</span>
             <span class="s1">&#39;access_type&#39;</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">refresh_tokens</span> <span class="ow">and</span> <span class="s1">&#39;offline&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;online&#39;</span>
         <span class="p">}</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefill_named_grant</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;prefill_named_grant&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefill_named_grant</span>
         <span class="k">if</span> <span class="n">additional_params</span><span class="p">:</span>
             <span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">additional_params</span><span class="p">)</span>
 
@@ -254,7 +264,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">globus-sdk-python 0.5.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">globus-sdk-python 0.5.1 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
