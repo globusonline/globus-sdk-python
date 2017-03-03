@@ -2,13 +2,12 @@ import requests
 import json
 import six
 import time
-
+import unittest
 try:
     import jose
     JOSE_FLAG = True
-except:
+except ImportError:
     JOSE_FLAG = False
-
 try:
     import mock
 except ImportError:
@@ -160,64 +159,64 @@ class OAuthTokenResponseTests(CapturedIOTestCase):
         self.assertEqual(self.response.other_tokens,
                          self.top_token["other_tokens"])
 
+    @unittest.skipIf(JOSE_FLAG, "python-jose successfully imported")
     def test_decode_id_token_no_jose(self):
         """
         If jose was not imported, confirms OptionalDependencyError
         """
-        if not JOSE_FLAG:
-            with self.assertRaises(GlobusOptionalDependencyError):
-                self.response.decode_id_token(self.ac)
+        with self.assertRaises(GlobusOptionalDependencyError):
+            self.response.decode_id_token(self.ac)
 
+    @unittest.skipIf(not JOSE_FLAG, "python-jose not imported")
     def test_decode_id_token_invalid_id(self):
         """
         Creates a response with an invalid id_token, and attempts to decode
         Confirms JWTError
         """
-        if JOSE_FLAG:
-            http_response = requests.Response()
-            http_response._content = six.b(json.dumps(self.other_token1))
-            http_response.headers["Content-Type"] = "application/json"
-            id_response = OAuthTokenResponse(http_response)
+        http_response = requests.Response()
+        http_response._content = six.b(json.dumps(self.other_token1))
+        http_response.headers["Content-Type"] = "application/json"
+        id_response = OAuthTokenResponse(http_response)
 
-            with self.assertRaises(jose.exceptions.JWTError):
-                id_response.decode_id_token(self.ac)
+        with self.assertRaises(jose.exceptions.JWTError):
+            id_response.decode_id_token(self.ac)
 
+    @unittest.skipIf(not JOSE_FLAG, "python-jose not imported")
     def test_decode_id_token_invalid_access(self):
         """
         Creates a response with an invalid access_token, and attempts to decode
         Confirms JWTClaimsError on the access_token
         """
-        if JOSE_FLAG:
-            http_response = requests.Response()
-            http_response._content = six.b(json.dumps(self.other_token2))
-            http_response.headers["Content-Type"] = "application/json"
-            id_response = OAuthTokenResponse(http_response)
+        http_response = requests.Response()
+        http_response._content = six.b(json.dumps(self.other_token2))
+        http_response.headers["Content-Type"] = "application/json"
+        id_response = OAuthTokenResponse(http_response)
 
-            with self.assertRaises(jose.exceptions.JWTClaimsError) as jwterr:
-                id_response.decode_id_token(self.ac)
-            self.assertEqual("at_hash claim does not match access_token.",
-                             str(jwterr.exception))
+        with self.assertRaises(jose.exceptions.JWTClaimsError) as jwterr:
+            id_response.decode_id_token(self.ac)
+        self.assertEqual("at_hash claim does not match access_token.",
+                         str(jwterr.exception))
 
+    @unittest.skipIf(not JOSE_FLAG, "python-jose not imported")
     def test_decode_id_token_invalid_client(self):
         """
         Sets AuthClient's id to an invalid value and attempts to decode,
         Confirms JWTCliamsError on the audience
         """
-        if JOSE_FLAG:
-            self.ac.client_id = "invalid_id"
+        self.ac.client_id = "invalid_id"
 
-            with self.assertRaises(jose.exceptions.JWTClaimsError) as jwterr:
-                self.response.decode_id_token(self.ac)
-            self.assertEqual("Invalid audience", str(jwterr.exception))
+        with self.assertRaises(jose.exceptions.JWTClaimsError) as jwterr:
+            self.response.decode_id_token(self.ac)
+        self.assertEqual("Invalid audience", str(jwterr.exception))
 
     '''
     TODO: come back after 3/4/2017 and confirm results on expired token
+    @unittest.skipIf(not JOSE_FLAG, "python-jose not imported")
     def test_decode_id_token(self):
         """
         """
-        if JOSE_FLAG:
-            decoded = self.response.decode_id_token(self.ac)
-            self.assertIn("exp", decoded)
+        decoded = self.response.decode_id_token(self.ac)
+        self.assertIn("exp", decoded)
     '''
 
 

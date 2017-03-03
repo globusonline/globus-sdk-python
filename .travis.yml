@@ -19,6 +19,7 @@ matrix:
 install:
   - pip install .
   - pip install -r test-requirements.txt
+  - pip install python-jose
 cache: pip
 script:
   - make test
