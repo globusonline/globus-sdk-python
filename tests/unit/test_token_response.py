@@ -182,42 +182,13 @@ class OAuthTokenResponseTests(CapturedIOTestCase):
             id_response.decode_id_token(self.ac)
 
     @unittest.skipIf(not JOSE_FLAG, "python-jose not imported")
-    def test_decode_id_token_invalid_access(self):
+    def test_decode_id_token_expired(self):
         """
-        Creates a response with an invalid access_token, and attempts to decode
-        Confirms JWTClaimsError on the access_token
+        Attempt to decode an expired id_token, confirms that the token is
+        decoded, but errors out on the expired signature.
         """
-        http_response = requests.Response()
-        http_response._content = six.b(json.dumps(self.other_token2))
-        http_response.headers["Content-Type"] = "application/json"
-        id_response = OAuthTokenResponse(http_response)
-
-        with self.assertRaises(jose.exceptions.JWTClaimsError) as jwterr:
-            id_response.decode_id_token(self.ac)
-        self.assertEqual("at_hash claim does not match access_token.",
-                         str(jwterr.exception))
-
-    @unittest.skipIf(not JOSE_FLAG, "python-jose not imported")
-    def test_decode_id_token_invalid_client(self):
-        """
-        Sets AuthClient's id to an invalid value and attempts to decode,
-        Confirms JWTCliamsError on the audience
-        """
-        self.ac.client_id = "invalid_id"
-
-        with self.assertRaises(jose.exceptions.JWTClaimsError) as jwterr:
+        with self.assertRaises(jose.exceptions.ExpiredSignatureError):
             self.response.decode_id_token(self.ac)
-        self.assertEqual("Invalid audience", str(jwterr.exception))
-
-    '''
-    TODO: come back after 3/4/2017 and confirm results on expired token
-    @unittest.skipIf(not JOSE_FLAG, "python-jose not imported")
-    def test_decode_id_token(self):
-        """
-        """
-        decoded = self.response.decode_id_token(self.ac)
-        self.assertIn("exp", decoded)
-    '''
 
 
 class OAuthDependentTokenResponseTests(CapturedIOTestCase):
