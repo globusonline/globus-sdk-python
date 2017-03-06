@@ -1,20 +1,22 @@
 VIRTUALENV=.venv
 
-.PHONY: docs build upload test clean help
+.PHONY: docs build upload test test/opts test/no-opts clean help
 
 
 help:
 	@echo "These are our make targets and what they do."
 	@echo "All unlisted targets are internal."
 	@echo ""
-	@echo "  help:      Show this helptext"
-	@echo "  localdev:  Setup local development env with a 'setup.py develop'"
-	@echo "  build:     Create the distributions which we like to upload to pypi"
-	@echo "  test:      Run the full suite of tests"
-	@echo "  docs:      Clean old HTML docs and rebuild them with sphinx"
-	@echo "  upload:    [build], but also upload to pypi using twine"
-	@echo "  clean:     Remove typically unwanted files, mostly from [build]"
-	@echo "  all:       Wrapper for [localdev] + [docs] + [test]"
+	@echo "  help:         Show this helptext"
+	@echo "  localdev:     Setup local development env with a 'setup.py develop'"
+	@echo "  build:        Create the distributions which we like to upload to pypi"
+	@echo "  test:         Run the full suite of tests"
+	@echo "  test/opts:    Run the full suite of tests with optional dependencies installed"
+	@echo "  test/no-opts: Run the full suite of tests with optional dependencies explicitly uninstalled"
+	@echo "  docs:         Clean old HTML docs and rebuild them with sphinx"
+	@echo "  upload:       [build], but also upload to pypi using twine"
+	@echo "  clean:        Remove typically unwanted files, mostly from [build]"
+	@echo "  all:          Wrapper for [localdev] + [docs] + [test]"
 
 
 all: localdev docs test
@@ -43,9 +45,20 @@ $(VIRTUALENV)/bin/flake8 $(VIRTUALENV)/bin/nose2: test-requirements.txt $(VIRTUA
 	# command sees that they exist and does not update their mtime
 	touch $(VIRTUALENV)/bin/flake8
 	touch $(VIRTUALENV)/bin/nose2
+opt-dependencies: $(VIRTUALENV)
+	# don't specify version -- grab the latest!
+	$(VIRTUALENV)/bin/pip install python-jose
+remove-opt-dependencies: $(VIRTUALENV)
+	-$(VIRTUALENV)/bin/pip uninstall -y python-jose
+
 test: $(VIRTUALENV)/bin/flake8 $(VIRTUALENV)/bin/nose2
 	$(VIRTUALENV)/bin/flake8
 	$(VIRTUALENV)/bin/nose2 --verbose
+test/opts: opt-dependencies
+	$(MAKE) test
+test/no-opts: remove-opt-dependencies
+	$(MAKE) test
+
 
 
 $(VIRTUALENV)/bin/sphinx-build: $(VIRTUALENV)
