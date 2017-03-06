@@ -27,9 +27,12 @@ class ActivationRequirementsResponseTests(CapturedIOTestCase):
         """
         Confirms expires_at is set properly by __init__
         """
-        for seconds in [0, 10, 100, 1000, -10]:  # should -10 work here?
+        for seconds in [0, 10, 100, 1000, -10]:
             response = self.make_response(expires_in=seconds)
-            self.assertEqual(response.expires_at, int(time.time()) + seconds)
+            expected = int(time.time()) + seconds
+            # make sure within a 1 second range of expected value
+            self.assertIn(response.expires_at,
+                          (expected - 1, expected, expected + 1))
 
         # -1 marks no expiration
         response = self.make_response(expires_in=-1)

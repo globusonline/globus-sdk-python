@@ -71,9 +71,10 @@ class OAuthTokenResponseTests(CapturedIOTestCase):
         for key in ["scope", "access_token", "refresh_token", "token_type"]:
             self.assertEqual(self.top_token[key], top_convert[key])
 
-        # sanity check expires at, assuming test will run well within 1 second
-        self.assertEqual(int(time.time()) + self.top_token["expires_in"],
-                         top_convert["expires_at_seconds"])
+        # sanity check expires at, assuming test runs within 1 second range
+        expected = int(time.time()) + self.top_token["expires_in"]
+        self.assertIn(top_convert["expires_at_seconds"],
+                      (expected - 1, expected, expected + 1))
 
         # missing refresh_token or token_type
         for key in ["refresh_token", "token_type"]:
@@ -89,10 +90,12 @@ class OAuthTokenResponseTests(CapturedIOTestCase):
                 _convert_token_info_dict(self.top_token)
             self.top_token[key] = value
 
-        # no expires_in makes expires at now
+        # no expires_in makes expires at now, withing a 1 second range
         self.top_token.pop("expires_in")
         top_convert = _convert_token_info_dict(self.top_token)
-        self.assertEqual(int(time.time()), top_convert["expires_at_seconds"])
+        expected = int(time.time())
+        self.assertIn(top_convert["expires_at_seconds"],
+                      (expected - 1, expected, expected + 1))
 
     def test_by_resource_server(self):
         """
@@ -109,16 +112,19 @@ class OAuthTokenResponseTests(CapturedIOTestCase):
             for key in ["scope", "access_token",
                         "refresh_token", "token_type"]:
                 self.assertEqual(server_data[key], token[key])
-            # assumes test will run well within 1 second
-            self.assertEqual(int(time.time()) + token["expires_in"],
-                             server_data["expires_at_seconds"])
+            # assumes test runs within 1 second range
+            expected = int(time.time()) + token["expires_in"]
+            self.assertIn(server_data["expires_at_seconds"],
+                          (expected - 1, expected, expected + 1))
 
     def test_expires_at_seconds(self):
         """
         Gets response's expires_at_seconds attribute, confirms expected value
         """
-        self.assertEqual(self.response.expires_at_seconds,
-                         int(time.time()) + self.top_token["expires_in"])
+        # assumes test runs within 1 second range
+        expected = int(time.time()) + self.top_token["expires_in"]
+        self.assertIn(self.response.expires_at_seconds,
+                      (expected - 1, expected, expected + 1))
 
     def test_expires_in(self):
         """
@@ -126,9 +132,9 @@ class OAuthTokenResponseTests(CapturedIOTestCase):
         Sanity checks that expires_in decreases as time goes on
         """
         first_measure = self.response.expires_in
-        time.sleep(1)
+        time.sleep(1.1)
         second_measure = self.response.expires_in
-        self.assertTrue(first_measure < self.top_token["expires_in"])
+        self.assertTrue(first_measure <= self.top_token["expires_in"])
         self.assertTrue(second_measure < first_measure)
 
     def test_access_token(self):
@@ -231,6 +237,7 @@ class OAuthDependentTokenResponseTests(CapturedIOTestCase):
             for key in ["scope", "access_token",
                         "refresh_token", "token_type"]:
                 self.assertEqual(server_data[key], token[key])
-            # assumes test will run well within 1 second
-            self.assertEqual(int(time.time()) + token["expires_in"],
-                             server_data["expires_at_seconds"])
+            # assumes test runs within 1 second range
+            expected = int(time.time()) + token["expires_in"]
+            self.assertIn(server_data["expires_at_seconds"],
+                          (expected - 1, expected, expected + 1))
