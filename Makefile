@@ -1,4 +1,7 @@
-VIRTUALENV=.venv
+# default to system python
+PYTHON_VERSION ?=
+PYTHON_INTERPRETER=python$(PYTHON_VERSION)
+VIRTUALENV=.venv$(PYTHON_VERSION)
 
 .PHONY: docs build upload test test/opts test/no-opts clean help
 
@@ -24,7 +27,7 @@ localdev: $(VIRTUALENV)
 
 
 $(VIRTUALENV): setup.py
-	virtualenv $(VIRTUALENV)
+	virtualenv --python $(PYTHON_INTERPRETER) $(VIRTUALENV)
 	$(VIRTUALENV)/bin/python setup.py develop
 	# explicit touch to ensure good update time relative to setup.py
 	touch $(VIRTUALENV)

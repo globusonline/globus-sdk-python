@@ -18,4 +18,4 @@ matrix:
     - python: "pypy3"
 cache: pip
 script:
-  - make test/opts
+  - make test/opts PYTHON_VERSION=$TRAVIS_PYTHON_VERSION

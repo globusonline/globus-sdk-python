@@ -1,4 +1,4 @@
 [flake8]
-exclude = .git,__pycache__,.eggs,dist,venv,.venv,venv27,virtualenv,docs,docs-source,build
+exclude = .git,__pycache__,.eggs,dist,venv,.venv*,venv27,virtualenv,docs,docs-source,build
 # explicitly set flake8 to not ignore any rules
 ignore = W503,W504
