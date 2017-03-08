@@ -17,5 +17,10 @@ matrix:
     - python: "pypy"
     - python: "pypy3"
 cache: pip
+install:
+  - pip install .
+  - pip install -r optional-dependencies.txt
+  - pip install -r test-requirements.txt
 script:
-  - make test/opts PYTHON_VERSION=$TRAVIS_PYTHON_VERSION
+  - flake8
+  - nose2 --verbose

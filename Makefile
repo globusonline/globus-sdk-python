@@ -49,10 +49,9 @@ $(VIRTUALENV)/bin/flake8 $(VIRTUALENV)/bin/nose2: test-requirements.txt $(VIRTUA
 	touch $(VIRTUALENV)/bin/flake8
 	touch $(VIRTUALENV)/bin/nose2
 opt-dependencies: $(VIRTUALENV)
-	# don't specify version -- grab the latest!
-	$(VIRTUALENV)/bin/pip install python-jose
+	$(VIRTUALENV)/bin/pip install -r optional-dependencies.txt
 remove-opt-dependencies: $(VIRTUALENV)
-	-$(VIRTUALENV)/bin/pip uninstall -y python-jose
+	-$(VIRTUALENV)/bin/pip uninstall -y -r optional-dependencies.txt
 
 test: $(VIRTUALENV)/bin/flake8 $(VIRTUALENV)/bin/nose2
 	$(VIRTUALENV)/bin/flake8
