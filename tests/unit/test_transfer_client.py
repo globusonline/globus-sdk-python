@@ -5,6 +5,7 @@ from tests.framework import (TransferClientTestCase, get_user_data,
                              GO_EP1_ID, GO_EP2_ID, GO_EP1_SERVER_ID)
 from globus_sdk.exc import TransferAPIError
 from globus_sdk.transfer.paging import PaginatedResource
+from globus_sdk.transfer.response import RecursiveLsResponse
 
 
 class TransferClientTests(TransferClientTestCase):
@@ -497,6 +498,31 @@ class TransferClientTests(TransferClientTestCase):
         file_data = filter_doc["DATA"][0]
         self.assertEqual(file_data["name"], file_name)
         self.assertTrue(file_data["size"] > min_size)
+
+    def test_recursive_operation_ls(self):
+        """
+        Performs a recursive ls on go#ep1:/, validates results.
+        Confirms depth and filter_after_first change results as expected.
+        """
+        # confirm recursive ls on "/share" finds file1.txt
+        ls_doc = self.tc.recursive_operation_ls(GO_EP1_ID, path="/share")
+        self.assertIsInstance(ls_doc, RecursiveLsResponse)
+        self.assertIn("/share/godata/file1.txt",
+                      [i["path"] for i in ls_doc])
+
+        # confirm depth of 1 finds godata, but not file1.txt
+        ls_doc = self.tc.recursive_operation_ls(GO_EP1_ID, depth=1, path="/")
+        paths = [i["path"] for i in ls_doc]
+        self.assertNotIn("/share/godata/file1.txt", paths)
+        self.assertIn("/share/godata", paths)
+
+        # confirm filtering by name "share" with filter_after_first set=False
+        # filters out /home, but not /share/godata/file1.txt
+        ls_doc = self.tc.recursive_operation_ls(
+            GO_EP1_ID, filter_after_first=False, path="/", filter="name:share")
+        paths = [i["path"] for i in ls_doc]
+        self.assertNotIn("/home", paths)
+        self.assertIn("/share/godata/file1.txt", paths)
 
     def test_operation_mkdir(self):
         """

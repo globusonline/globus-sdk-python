@@ -7,7 +7,8 @@ from globus_sdk.base import BaseClient, merge_params, safe_stringify
 from globus_sdk.authorizers import (
     AccessTokenAuthorizer, RefreshTokenAuthorizer, ClientCredentialsAuthorizer)
 from globus_sdk.transfer.response import (
-    TransferResponse, IterableTransferResponse, ActivationRequirementsResponse)
+    TransferResponse, IterableTransferResponse, ActivationRequirementsResponse,
+    RecursiveLsResponse)
 from globus_sdk.transfer.paging import PaginatedResource
 
 logger = logging.getLogger(__name__)
@@ -920,6 +921,55 @@ class TransferClient(BaseClient):
         path = self.qjoin_path("operation/endpoint", endpoint_id, "ls")
         return self.get(path, params=params,
                         response_class=IterableTransferResponse)
+
+    def recursive_operation_ls(self, endpoint_id,
+                               depth=3, filter_after_first=True, **params):
+        """
+        Makes recursive calls to ``GET /operation/endpoint/<endpoint_id>/ls``
+
+        Does not preserve access to top level operation_ls fields, but
+        adds a "path" field for every item that represents the full
+        path to that item.
+
+        :rtype: iterable of :class:`GlobusResponse
+                <globus_sdk.response.GlobusResponse>`
+
+        **Parameters**
+
+            ``endpoint_id`` (*string*)
+              The endpoint being recursively ls'ed. If no "path" is given in
+              params, the start path is determined by this endpoint.
+
+            ``depth`` (*int*)
+              The maximum file depth the recursive ls will go to.
+
+            ``filter_after_first`` (*bool*)
+              If False, any "filter" in params will only be applied to the
+              first, top level ls, all results beyond that will be unfiltered.
+
+            ``params``
+              Parameters that will be passed through as query params.
+
+        **Examples**
+
+        >>> tc = globus_sdk.TransferClient(...)
+        >>> for entry in tc.recursive_operation_ls(ep_id, path="/~/project1/"):
+        >>>     print(entry["path"], entry["type"])
+
+        **External Documentation**
+
+        See
+        `List Directory Contents \
+        <https://docs.globus.org/api/transfer/file_operations/#list_directory_contents>`_
+        in the REST documentation for details, but note that top level data
+        fields are no longer available and an additional per item
+        "path" field is added.
+        """
+        endpoint_id = safe_stringify(endpoint_id)
+        self.logger.info("TransferClient.recursive_operation_ls({}, {}, {})"
+                         .format(endpoint_id, depth, params))
+        return RecursiveLsResponse(self, endpoint_id,
+                                   depth, filter_after_first, params)
 
     def operation_mkdir(self, endpoint_id, path, **params):
         """
