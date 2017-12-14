@@ -34,6 +34,9 @@ class SearchClient(BaseClient):
 
     def __init__(self, authorizer=None, **kwargs):
         BaseClient.__init__(self, "search", authorizer=authorizer, **kwargs)
+        # a content-type header for JSON payloads is required by the Search API
+        # setting this does not harm GET or DELETE, and makes POST/PUT work
+        self._headers['Content-Type'] = 'application/json'
 
     #
     # Index Management
