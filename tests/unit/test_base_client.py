@@ -68,7 +68,7 @@ class BaseClientTests(CapturedIOTestCase):
         self.bc.logger.info(in_msg)
         # confirm results
         out_msg = memory_handler.buffer[0].getMessage()
-        expected_msg = "[instance:{}] {}".format(id(self.bc), in_msg)
+        expected_msg = "[instance:{0}] {1}".format(id(self.bc), in_msg)
         self.assertEqual(expected_msg, out_msg)
 
         memory_handler.close()

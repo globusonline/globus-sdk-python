@@ -55,8 +55,8 @@ class ClientCredentialsAuthorizer(RenewingAuthorizer):
                  access_token=None, expires_at=None, on_refresh=None):
         logger.info((
             "Setting up ClientCredentialsAuthorizer with confidential_client ="
-            " instance:{} and scopes = "
-            "{}".format(id(confidential_client), scopes)))
+            " instance:{0} and scopes = "
+            "{0}".format(id(confidential_client), scopes)))
 
         # values for _get_token_data
         self.confidential_client = confidential_client
@@ -82,6 +82,6 @@ class ClientCredentialsAuthorizer(RenewingAuthorizer):
             raise ValueError(
                 "Attempting get new access token for client credentials "
                 "authorizer didn't return exactly one token. Ensure scopes "
-                "{} are for only one resource server.".format(self.scopes))
+                "{0} are for only one resource server.".format(self.scopes))
 
         return next(iter(token_data))

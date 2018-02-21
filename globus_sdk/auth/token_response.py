@@ -50,7 +50,7 @@ class _ByScopesGetter(object):
 
     def __getitem__(self, scopename):
         if not isinstance(scopename, six.string_types):
-            raise KeyError('by_scopes cannot contain non-string value "{}"'
+            raise KeyError('by_scopes cannot contain non-string value "{0}"'
                            .format(scopename))
 
         # split on spaces
@@ -64,13 +64,13 @@ class _ByScopesGetter(object):
                 rs_names.add(self.scope_map[scope]['resource_server'])
                 toks.append(self.scope_map[scope])
             except KeyError:
-                raise KeyError(('Scope specifier "{}" contains scope "{}" '
+                raise KeyError(('Scope specifier "{0}" contains scope "{1}" '
                                 "which was not found"
                                 ).format(scopename, scope))
         # if there isn't exactly 1 token, it's an error
         if len(rs_names) != 1:
             raise KeyError(
-                'Scope specifier "{}" did not match exactly one token!'
+                'Scope specifier "{0}" did not match exactly one token!'
                 .format(scopename))
         # pop the only element in the set
         return toks.pop()
@@ -164,7 +164,7 @@ class OAuthTokenResponse(GlobusHTTPResponse):
               this token back to the OAuthTokenResponse. The SDK now tracks
               this internally, so it is no longer necessary.
         """
-        logger.info('Decoding ID Token "{}"'.format(self['id_token']))
+        logger.info('Decoding ID Token "{0}"'.format(self['id_token']))
 
         # warn (not error) on older usage pattern, but still respect it
         # FIXME: should be deprecated and removed in SDK v2

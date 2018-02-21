@@ -113,11 +113,12 @@ class PaginatedResource(GlobusResponse, six.Iterator):
             An value from an enum on this class which tells us how paging works
             for this API.
         """
-        logger.info("Creating PaginatedResource({}) on {}(instance:{}):{}:{}"
-                    .format(paging_style,
-                            client_method.__self__.__class__.__name__,
-                            id(client_method.__self__),
-                            client_method.__name__, path))
+        logger.info(
+            "Creating PaginatedResource({0}) on {1}(instance:{2}):{3}:{4}"
+            .format(paging_style,
+                    client_method.__self__.__class__.__name__,
+                    id(client_method.__self__),
+                    client_method.__name__, path))
         self.max_results_per_call = max_results_per_call
         self.max_total_results = max_total_results
         self.offset = offset
@@ -288,7 +289,7 @@ class PaginatedResource(GlobusResponse, six.Iterator):
             if self.paging_style == self.PAGING_STYLE_TOTAL:
                 return self.offset < res['total']
 
-            logger.error("PaginatedResource.paging_style={} is invalid"
+            logger.error("PaginatedResource.paging_style={0} is invalid"
                          .format(self.paging_style))
             raise GlobusSDKUsageError(
                 'Invalid Paging Style Given to PaginatedResource')

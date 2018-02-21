@@ -103,34 +103,34 @@ class TransferData(dict):
         self["DATA_TYPE"] = "transfer"
         self["submission_id"] = submission_id or \
             transfer_client.get_submission_id()["value"]
-        logger.info("TransferData.submission_id = {}"
+        logger.info("TransferData.submission_id = {0}"
                     .format(self["submission_id"]))
         self["source_endpoint"] = source_endpoint
-        logger.info("TransferData.source_endpoint = {}"
+        logger.info("TransferData.source_endpoint = {0}"
                     .format(source_endpoint))
         self["destination_endpoint"] = destination_endpoint
-        logger.info("TransferData.destination_endpoint = {}"
+        logger.info("TransferData.destination_endpoint = {0}"
                     .format(destination_endpoint))
         self["verify_checksum"] = verify_checksum
-        logger.info("TransferData.verify_checksum = {}"
+        logger.info("TransferData.verify_checksum = {0}"
                     .format(verify_checksum))
         self["preserve_timestamp"] = preserve_timestamp
-        logger.info("TransferData.preserve_timestamp = {}"
+        logger.info("TransferData.preserve_timestamp = {0}"
                     .format(preserve_timestamp))
         self["encrypt_data"] = encrypt_data
-        logger.info("TransferData.encrypt_data = {}"
+        logger.info("TransferData.encrypt_data = {0}"
                     .format(encrypt_data))
         self["recursive_symlinks"] = recursive_symlinks
-        logger.info("TransferData.recursive_symlinks = {}"
+        logger.info("TransferData.recursive_symlinks = {0}"
                     .format(recursive_symlinks))
 
         if label is not None:
             self["label"] = label
-            logger.debug("TransferData.label = {}".format(label))
+            logger.debug("TransferData.label = {0}".format(label))
 
         if deadline is not None:
             self["deadline"] = str(deadline)
-            logger.debug("TransferData.deadline = {}".format(deadline))
+            logger.debug("TransferData.deadline = {0}".format(deadline))
 
         # map the sync_level (if it's a nice string) to one of the known int
         # values
@@ -141,14 +141,14 @@ class TransferData(dict):
         if sync_level is not None:
             sync_dict = {"exists": 0, "size": 1, "mtime": 2, "checksum": 3}
             self['sync_level'] = sync_dict.get(sync_level, sync_level)
-            logger.info("TransferData.sync_level = {} ({})"
+            logger.info("TransferData.sync_level = {0} ({1})"
                         .format(self['sync_level'], sync_level))
 
         self["DATA"] = []
 
         self.update(kwargs)
         for option, value in kwargs.items():
-            logger.info("TransferData.{} = {} (option passed in via kwargs)"
+            logger.info("TransferData.{0} = {1} (option passed in via kwargs)"
                         .format(option, value))
 
     def add_item(self, source_path, destination_path, recursive=False):
@@ -168,7 +168,7 @@ class TransferData(dict):
             "destination_path": destination_path,
             "recursive": recursive,
         }
-        logger.debug('TransferData[{}, {}].add_item: "{}"->"{}"'
+        logger.debug('TransferData[{0}, {1}].add_item: "{2}"->"{3}"'
                      .format(self["source_endpoint"],
                              self["destination_endpoint"],
                              source_path, destination_path))
@@ -189,7 +189,7 @@ class TransferData(dict):
             "source_path": source_path,
             "destination_path": destination_path,
         }
-        logger.debug('TransferData[{}, {}].add_symlink_item: "{}"->"{}"'
+        logger.debug('TransferData[{0}, {1}].add_symlink_item: "{2}"->"{3}"'
                      .format(self["source_endpoint"],
                              self["destination_endpoint"],
                              source_path, destination_path))
@@ -254,28 +254,28 @@ class DeleteData(dict):
         self["DATA_TYPE"] = "delete"
         self["submission_id"] = submission_id or \
             transfer_client.get_submission_id()["value"]
-        logger.info("DeleteData.submission_id = {}"
+        logger.info("DeleteData.submission_id = {0}"
                     .format(self["submission_id"]))
         self["endpoint"] = endpoint
-        logger.info("DeleteData.endpoint = {}"
+        logger.info("DeleteData.endpoint = {0}"
                     .format(endpoint))
         self["recursive"] = recursive
-        logger.info("DeleteData.recursive = {}"
+        logger.info("DeleteData.recursive = {0}"
                     .format(recursive))
 
         if label is not None:
             self["label"] = label
-            logger.debug("DeleteData.label = {}".format(label))
+            logger.debug("DeleteData.label = {0}".format(label))
 
         if deadline is not None:
             self["deadline"] = str(deadline)
-            logger.debug("DeleteData.deadline = {}".format(deadline))
+            logger.debug("DeleteData.deadline = {0}".format(deadline))
 
         self["DATA"] = []
 
         self.update(kwargs)
         for option, value in kwargs.items():
-            logger.info("DeleteData.{} = {} (option passed in via kwargs)"
+            logger.info("DeleteData.{0} = {1} (option passed in via kwargs)"
                         .format(option, value))
 
     def add_item(self, path):
@@ -292,6 +292,6 @@ class DeleteData(dict):
             "DATA_TYPE": "delete_item",
             "path": path,
         }
-        logger.debug('DeleteData[{}].add_item: "{}"'
+        logger.debug('DeleteData[{0}].add_item: "{1}"'
                      .format(self["endpoint"], path))
         self["DATA"].append(item_data)

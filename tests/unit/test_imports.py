@@ -18,7 +18,7 @@ class TestImports(unittest.TestCase):
     """
 
     def _check_import_str(self, s):
-        proc = subprocess.Popen('{} -c "{}"'.format(PYTHON_BINARY, s),
+        proc = subprocess.Popen('{0} -c "{1}"'.format(PYTHON_BINARY, s),
                                 shell=True, stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE)
         status = proc.wait()

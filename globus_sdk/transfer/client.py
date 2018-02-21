@@ -87,7 +87,8 @@ class TransferClient(BaseClient):
         in the REST documentation for details.
         """
         endpoint_id = safe_stringify(endpoint_id)
-        self.logger.info("TransferClient.get_endpoint({})".format(endpoint_id))
+        self.logger.info("TransferClient.get_endpoint({0})"
+                         .format(endpoint_id))
         path = self.qjoin_path("endpoint", endpoint_id)
         return self.get(path, params=params)
 
@@ -124,7 +125,7 @@ class TransferClient(BaseClient):
             data['myproxy_server'] = None
 
         endpoint_id = safe_stringify(endpoint_id)
-        self.logger.info("TransferClient.update_endpoint({}, ...)"
+        self.logger.info("TransferClient.update_endpoint({0}, ...)"
                          .format(endpoint_id))
         path = self.qjoin_path("endpoint", endpoint_id)
         return self.put(path, data, params=params)
@@ -188,7 +189,7 @@ class TransferClient(BaseClient):
         in the REST documentation for details.
         """
         endpoint_id = safe_stringify(endpoint_id)
-        self.logger.info("TransferClient.delete_endpoint({})"
+        self.logger.info("TransferClient.delete_endpoint({0})"
                          .format(endpoint_id))
         path = self.qjoin_path("endpoint", endpoint_id)
         return self.delete(path)
@@ -266,7 +267,7 @@ class TransferClient(BaseClient):
         merge_params(params, filter_scope=filter_scope,
                      filter_fulltext=filter_fulltext)
         self.logger.info(
-            "TransferClient.endpoint_manager_monitored_endpoints({})"
+            "TransferClient.endpoint_manager_monitored_endpoints({0})"
             .format(params))
         return PaginatedResource(
             self.get, "endpoint_search", {'params': params},
@@ -314,17 +315,17 @@ class TransferClient(BaseClient):
         >>> tc = globus_sdk.TransferClient(...)
         >>> r = tc.endpoint_autoactivate(ep_id, if_expires_in=3600)
         >>> if r['code'] == 'AutoActivationFailed':
-        >>>     print('Endpoint({}) Not Active! Error! Source message: {}'
+        >>>     print('Endpoint({0}) Not Active! Error! Source message: {1}'
         >>>           .format(ep_id, r['message']))
         >>>     sys.exit(1)
         >>> elif r['code'] == 'AutoActivated.CachedCredential':
-        >>>     print('Endpoint({}) autoactivated using a cached credential.'
+        >>>     print('Endpoint({0}) autoactivated using a cached credential.'
         >>>           .format(ep_id))
         >>> elif r['code'] == 'AutoActivated.GlobusOnlineCredential':
-        >>>     print(('Endpoint({}) autoactivated using a built-in Globus '
+        >>>     print(('Endpoint({0}) autoactivated using a built-in Globus '
         >>>            'credential.').format(ep_id))
         >>> elif r['code'] = 'AlreadyActivated':
-        >>>     print('Endpoint({}) already active until at least {}'
+        >>>     print('Endpoint({0}) already active until at least {1}'
         >>>           .format(ep_id, 3600))
 
         **External Documentation**
@@ -335,7 +336,7 @@ class TransferClient(BaseClient):
         in the REST documentation for details.
         """
         endpoint_id = safe_stringify(endpoint_id)
-        self.logger.info("TransferClient.endpoint_autoactivate({})"
+        self.logger.info("TransferClient.endpoint_autoactivate({0})"
                          .format(endpoint_id))
         path = self.qjoin_path("endpoint", endpoint_id, "autoactivate")
         return self.post(path, params=params)
@@ -355,7 +356,7 @@ class TransferClient(BaseClient):
         in the REST documentation for details.
         """
         endpoint_id = safe_stringify(endpoint_id)
-        self.logger.info("TransferClient.endpoint_deactivate({})"
+        self.logger.info("TransferClient.endpoint_deactivate({0})"
                          .format(endpoint_id))
         path = self.qjoin_path("endpoint", endpoint_id, "deactivate")
         return self.post(path, params=params)
@@ -379,7 +380,7 @@ class TransferClient(BaseClient):
         in the REST documentation for details.
         """
         endpoint_id = safe_stringify(endpoint_id)
-        self.logger.info("TransferClient.endpoint_activate({})"
+        self.logger.info("TransferClient.endpoint_activate({0})"
                          .format(endpoint_id))
         path = self.qjoin_path("endpoint", endpoint_id, "activate")
         return self.post(path, json_body=requirements_data, params=params)
@@ -419,8 +420,9 @@ class TransferClient(BaseClient):
         in the REST documentation for details.
         """
         endpoint_id = safe_stringify(endpoint_id)
-        self.logger.info("TransferClient.my_effective_pause_rule_list({}, ...)"
-                         .format(endpoint_id))
+        self.logger.info(
+            "TransferClient.my_effective_pause_rule_list({0}, ...)"
+            .format(endpoint_id))
         path = self.qjoin_path('endpoint', endpoint_id,
                                'my_effective_pause_rule_list')
         return self.get(path, params=params,
@@ -443,7 +445,7 @@ class TransferClient(BaseClient):
         in the REST documentation for details.
         """
         endpoint_id = safe_stringify(endpoint_id)
-        self.logger.info("TransferClient.my_shared_endpoint_list({}, ...)"
+        self.logger.info("TransferClient.my_shared_endpoint_list({0}, ...)"
                          .format(endpoint_id))
         path = self.qjoin_path('endpoint', endpoint_id,
                                'my_shared_endpoint_list')
@@ -503,7 +505,7 @@ class TransferClient(BaseClient):
         in the REST documentation for details.
         """
         endpoint_id = safe_stringify(endpoint_id)
-        self.logger.info("TransferClient.endpoint_server_list({}, ...)"
+        self.logger.info("TransferClient.endpoint_server_list({0}, ...)"
                          .format(endpoint_id))
         path = self.qjoin_path('endpoint', endpoint_id, 'server_list')
         return self.get(path, params=params,
@@ -524,7 +526,7 @@ class TransferClient(BaseClient):
         in the REST documentation for details.
         """
         endpoint_id = safe_stringify(endpoint_id)
-        self.logger.info("TransferClient.get_endpoint_server({}, {}, ...)"
+        self.logger.info("TransferClient.get_endpoint_server({0}, {1}, ...)"
                          .format(endpoint_id, server_id))
         path = self.qjoin_path("endpoint", endpoint_id,
                                "server", str(server_id))
@@ -545,7 +547,7 @@ class TransferClient(BaseClient):
         in the REST documentation for details.
         """
         endpoint_id = safe_stringify(endpoint_id)
-        self.logger.info("TransferClient.add_endpoint_server({}, ...)"
+        self.logger.info("TransferClient.add_endpoint_server({0}, ...)"
                          .format(endpoint_id))
         path = self.qjoin_path("endpoint", endpoint_id, "server")
         return self.post(path, server_data)
@@ -565,7 +567,7 @@ class TransferClient(BaseClient):
         in the REST documentation for details.
         """
         endpoint_id = safe_stringify(endpoint_id)
-        self.logger.info("TransferClient.update_endpoint_server({}, {}, ...)"
+        self.logger.info("TransferClient.update_endpoint_server({0}, {1}, ...)"
                          .format(endpoint_id, server_id))
         path = self.qjoin_path("endpoint", endpoint_id,
                                "server", str(server_id))
@@ -586,7 +588,7 @@ class TransferClient(BaseClient):
         in the REST documentation for details.
         """
         endpoint_id = safe_stringify(endpoint_id)
-        self.logger.info("TransferClient.delete_endpoint_server({}, {})"
+        self.logger.info("TransferClient.delete_endpoint_server({0}, {1})"
                          .format(endpoint_id, server_id))
         path = self.qjoin_path("endpoint", endpoint_id,
                                "server", str(server_id))
@@ -611,7 +613,7 @@ class TransferClient(BaseClient):
         in the REST documentation for details.
         """
         endpoint_id = safe_stringify(endpoint_id)
-        self.logger.info("TransferClient.endpoint_role_list({}, ...)"
+        self.logger.info("TransferClient.endpoint_role_list({0}, ...)"
                          .format(endpoint_id))
         path = self.qjoin_path('endpoint', endpoint_id, 'role_list')
         return self.get(path, params=params,
@@ -632,7 +634,7 @@ class TransferClient(BaseClient):
         in the REST documentation for details.
         """
         endpoint_id = safe_stringify(endpoint_id)
-        self.logger.info("TransferClient.add_endpoint_role({}, ...)"
+        self.logger.info("TransferClient.add_endpoint_role({0}, ...)"
                          .format(endpoint_id))
         path = self.qjoin_path('endpoint', endpoint_id, 'role')
         return self.post(path, role_data)
@@ -652,7 +654,7 @@ class TransferClient(BaseClient):
         in the REST documentation for details.
         """
         endpoint_id = safe_stringify(endpoint_id)
-        self.logger.info("TransferClient.get_endpoint_role({}, {}, ...)"
+        self.logger.info("TransferClient.get_endpoint_role({0}, {1}, ...)"
                          .format(endpoint_id, role_id))
         path = self.qjoin_path('endpoint', endpoint_id, 'role', role_id)
         return self.get(path, params=params)
@@ -672,7 +674,7 @@ class TransferClient(BaseClient):
         in the REST documentation for details.
         """
         endpoint_id = safe_stringify(endpoint_id)
-        self.logger.info("TransferClient.delete_endpoint_role({}, {})"
+        self.logger.info("TransferClient.delete_endpoint_role({0}, {1})"
                          .format(endpoint_id, role_id))
         path = self.qjoin_path('endpoint', endpoint_id, 'role', role_id)
         return self.delete(path)
@@ -696,7 +698,7 @@ class TransferClient(BaseClient):
         in the REST documentation for details.
         """
         endpoint_id = safe_stringify(endpoint_id)
-        self.logger.info("TransferClient.endpoint_acl_list({}, ...)"
+        self.logger.info("TransferClient.endpoint_acl_list({0}, ...)"
                          .format(endpoint_id))
         path = self.qjoin_path('endpoint', endpoint_id, 'access_list')
         return self.get(path, params=params,
@@ -717,7 +719,7 @@ class TransferClient(BaseClient):
         in the REST documentation for details.
         """
         endpoint_id = safe_stringify(endpoint_id)
-        self.logger.info("TransferClient.get_endpoint_acl_rule({}, {}, ...)"
+        self.logger.info("TransferClient.get_endpoint_acl_rule({0}, {1}, ...)"
                          .format(endpoint_id, rule_id))
         path = self.qjoin_path('endpoint', endpoint_id, 'access', rule_id)
         return self.get(path, params=params)
@@ -761,7 +763,7 @@ class TransferClient(BaseClient):
         in the REST documentation for details.
         """
         endpoint_id = safe_stringify(endpoint_id)
-        self.logger.info("TransferClient.add_endpoint_acl_rule({}, ...)"
+        self.logger.info("TransferClient.add_endpoint_acl_rule({0}, ...)"
                          .format(endpoint_id))
         path = self.qjoin_path('endpoint', endpoint_id, 'access')
         return self.post(path, rule_data)
@@ -781,8 +783,9 @@ class TransferClient(BaseClient):
         in the REST documentation for details.
         """
         endpoint_id = safe_stringify(endpoint_id)
-        self.logger.info("TransferClient.update_endpoint_acl_rule({}, {}, ...)"
-                         .format(endpoint_id, rule_id))
+        self.logger.info(
+            "TransferClient.update_endpoint_acl_rule({0}, {1}, ...)"
+            .format(endpoint_id, rule_id))
         path = self.qjoin_path('endpoint', endpoint_id, 'access', rule_id)
         return self.put(path, rule_data)
 
@@ -801,7 +804,7 @@ class TransferClient(BaseClient):
         in the REST documentation for details.
         """
         endpoint_id = safe_stringify(endpoint_id)
-        self.logger.info("TransferClient.delete_endpoint_acl_rule({}, {})"
+        self.logger.info("TransferClient.delete_endpoint_acl_rule({0}, {1})"
                          .format(endpoint_id, rule_id))
         path = self.qjoin_path('endpoint', endpoint_id, 'access', rule_id)
         return self.delete(path)
@@ -824,7 +827,7 @@ class TransferClient(BaseClient):
         <https://docs.globus.org/api/transfer/endpoint_bookmarks/#get_list_of_bookmarks>`_
         in the REST documentation for details.
         """
-        self.logger.info("TransferClient.bookmark_list({})".format(params))
+        self.logger.info("TransferClient.bookmark_list({0})".format(params))
         return self.get('bookmark_list', params=params,
                         response_class=IterableTransferResponse)
 
@@ -842,7 +845,7 @@ class TransferClient(BaseClient):
         <https://docs.globus.org/api/transfer/endpoint_bookmarks/#create_bookmark>`_
         in the REST documentation for details.
         """
-        self.logger.info("TransferClient.create_bookmark({})"
+        self.logger.info("TransferClient.create_bookmark({0})"
                          .format(bookmark_data))
         return self.post('bookmark', bookmark_data)
 
@@ -861,7 +864,8 @@ class TransferClient(BaseClient):
         in the REST documentation for details.
         """
         bookmark_id = safe_stringify(bookmark_id)
-        self.logger.info("TransferClient.get_bookmark({})".format(bookmark_id))
+        self.logger.info("TransferClient.get_bookmark({0})"
+                         .format(bookmark_id))
         path = self.qjoin_path('bookmark', bookmark_id)
         return self.get(path, params=params)
 
@@ -879,7 +883,7 @@ class TransferClient(BaseClient):
         <https://docs.globus.org/api/transfer/endpoint_bookmarks/#update_bookmark>`_
         in the REST documentation for details.
         """
-        self.logger.info("TransferClient.update_bookmark({})"
+        self.logger.info("TransferClient.update_bookmark({0})"
                          .format(bookmark_id))
         path = self.qjoin_path('bookmark', bookmark_id)
         return self.put(path, bookmark_data)
@@ -898,7 +902,7 @@ class TransferClient(BaseClient):
         <https://docs.globus.org/api/transfer/endpoint_bookmarks/#delete_bookmark_by_id>`_
         in the REST documentation for details.
         """
-        self.logger.info("TransferClient.delete_bookmark({})"
+        self.logger.info("TransferClient.delete_bookmark({0})"
                          .format(bookmark_id))
         path = self.qjoin_path('bookmark', bookmark_id)
         return self.delete(path)
@@ -928,7 +932,7 @@ class TransferClient(BaseClient):
         in the REST documentation for details.
         """
         endpoint_id = safe_stringify(endpoint_id)
-        self.logger.info("TransferClient.operation_ls({}, {})"
+        self.logger.info("TransferClient.operation_ls({0}, {1})"
                          .format(endpoint_id, params))
         path = self.qjoin_path("operation/endpoint", endpoint_id, "ls")
         return self.get(path, params=params,
@@ -955,7 +959,7 @@ class TransferClient(BaseClient):
         """
         endpoint_id = safe_stringify(endpoint_id)
         path = safe_stringify(path)
-        self.logger.info("TransferClient.operation_mkdir({}, {}, {})"
+        self.logger.info("TransferClient.operation_mkdir({0}, {1}, {2})"
                          .format(endpoint_id, path, params))
         resource_path = self.qjoin_path("operation/endpoint", endpoint_id,
                                         "mkdir")
@@ -988,7 +992,7 @@ class TransferClient(BaseClient):
         endpoint_id = safe_stringify(endpoint_id)
         oldpath = safe_stringify(oldpath)
         newpath = safe_stringify(newpath)
-        self.logger.info("TransferClient.operation_rename({}, {}, {}, {})"
+        self.logger.info("TransferClient.operation_rename({0}, {1}, {2}, {3})"
                          .format(endpoint_id, oldpath, newpath, params))
         resource_path = self.qjoin_path("operation/endpoint", endpoint_id,
                                         "rename")
@@ -1025,7 +1029,7 @@ class TransferClient(BaseClient):
         endpoint_id = safe_stringify(endpoint_id)
         symlink_target = safe_stringify(symlink_target)
         path = safe_stringify(path)
-        self.logger.info("TransferClient.operation_symlink({}, {}, {}, {})"
+        self.logger.info("TransferClient.operation_symlink({0}, {1}, {2}, {3})"
                          .format(endpoint_id, symlink_target, path, params))
         resource_path = self.qjoin_path("operation/endpoint", endpoint_id,
                                         "symlink")
@@ -1063,7 +1067,8 @@ class TransferClient(BaseClient):
         <https://docs.globus.org/api/transfer/task_submit/#get_submission_id>`_
         in the REST documentation for more details.
         """
-        self.logger.info("TransferClient.get_submission_id({})".format(params))
+        self.logger.info("TransferClient.get_submission_id({0})"
+                         .format(params))
         return self.get("submission_id", params=params)
 
     def submit_transfer(self, data):
@@ -1160,7 +1165,7 @@ class TransferClient(BaseClient):
 
         >>> tc = TransferClient(...)
         >>> for task in tc.task_list():
-        >>>     print("Task({}): {} -> {}".format(
+        >>>     print("Task({0}): {1} -> {2}".format(
         >>>         task["task_id"], task["source_endpoint"],
         >>>         task["destination_endpoint"))
 
@@ -1208,7 +1213,7 @@ class TransferClient(BaseClient):
         >>> tc = TransferClient(...)
         >>> task_id = ...
         >>> for event in tc.task_event_list(task_id):
-        >>>     print("Event on Task({}) at {}:\n{}".format(
+        >>>     print("Event on Task({0}) at {1}:\n{2}".format(
         >>>         task_id, event["time"], event["description"])
 
         **External Documentation**
@@ -1218,7 +1223,7 @@ class TransferClient(BaseClient):
         <https://docs.globus.org/api/transfer/task/#get_event_list>`_
         in the REST documentation for details.
         """
-        self.logger.info("TransferClient.task_event_list({}, ...)"
+        self.logger.info("TransferClient.task_event_list({0}, ...)"
                          .format(task_id))
         path = self.qjoin_path('task', task_id, 'event_list')
         return PaginatedResource(
@@ -1240,7 +1245,7 @@ class TransferClient(BaseClient):
         <https://docs.globus.org/api/transfer/task/#get_task_by_id>`_
         in the REST documentation for details.
         """
-        self.logger.info("TransferClient.get_task({}, ...)".format(task_id))
+        self.logger.info("TransferClient.get_task({0}, ...)".format(task_id))
         resource_path = self.qjoin_path("task", task_id)
         return self.get(resource_path, params=params)
 
@@ -1258,7 +1263,8 @@ class TransferClient(BaseClient):
         <https://docs.globus.org/api/transfer/task/#update_task_by_id>`_
         in the REST documentation for details.
         """
-        self.logger.info("TransferClient.update_task({}, ...)".format(task_id))
+        self.logger.info("TransferClient.update_task({0}, ...)"
+                         .format(task_id))
         resource_path = self.qjoin_path("task", task_id)
         return self.put(resource_path, data, params=params)
 
@@ -1276,7 +1282,7 @@ class TransferClient(BaseClient):
         <https://docs.globus.org/api/transfer/task/#cancel_task_by_id>`_
         in the REST documentation for details.
         """
-        self.logger.info("TransferClient.cancel_task({})".format(task_id))
+        self.logger.info("TransferClient.cancel_task({0})".format(task_id))
         resource_path = self.qjoin_path("task", task_id, "cancel")
         return self.post(resource_path)
 
@@ -1327,19 +1333,19 @@ class TransferClient(BaseClient):
         >>>     print(".", end="")
         >>> print("\n{0} completed!".format(task_id))
         """
-        self.logger.info("TransferClient.task_wait({}, {}, {})"
+        self.logger.info("TransferClient.task_wait({0}, {1}, {2})"
                          .format(task_id, timeout, polling_interval))
 
         # check valid args
         if timeout < 1:
             self.logger.error(
-                "task_wait() timeout={} is less than minimum of 1s"
+                "task_wait() timeout={0} is less than minimum of 1s"
                 .format(timeout))
             raise exc.GlobusSDKUsageError(
                 "TransferClient.task_wait timeout has a minimum of 1")
         if polling_interval < 1:
             self.logger.error(
-                "task_wait() polling_interval={} is less than minimum of 1s"
+                "task_wait() polling_interval={0} is less than minimum of 1s"
                 .format(polling_interval))
             raise exc.GlobusSDKUsageError(
                 "TransferClient.task_wait polling_interval has a minimum of 1")
@@ -1362,7 +1368,7 @@ class TransferClient(BaseClient):
             status = task['status']
             if status != 'ACTIVE':
                 self.logger.debug(
-                    "task_wait(task_id={}) terminated with status={}"
+                    "task_wait(task_id={0}) terminated with status={1}"
                     .format(task_id, status))
                 return True
 
@@ -1371,11 +1377,11 @@ class TransferClient(BaseClient):
             waited_time += polling_interval
             if timed_out(waited_time):
                 self.logger.debug(
-                    "task_wait(task_id={}) timed out".format(task_id))
+                    "task_wait(task_id={0}) timed out".format(task_id))
                 return False
 
             self.logger.debug(
-                "task_wait(task_id={}) waiting {}s"
+                "task_wait(task_id={0}) waiting {1}s"
                 .format(task_id, polling_interval))
             time.sleep(polling_interval)
         # unreachable -- end of task_wait
@@ -1394,7 +1400,7 @@ class TransferClient(BaseClient):
         <https://docs.globus.org/api/transfer/task/#get_task_pause_info>`_
         in the REST documentation for details.
         """
-        self.logger.info("TransferClient.task_pause_info({}, ...)"
+        self.logger.info("TransferClient.task_pause_info({0}, ...)"
                          .format(task_id))
         resource_path = self.qjoin_path("task", task_id, "pause_info")
         return self.get(resource_path, params=params)
@@ -1431,7 +1437,7 @@ class TransferClient(BaseClient):
         >>> tc = TransferClient(...)
         >>> task_id = ...
         >>> for info in tc.task_successful_transfers(task_id):
-        >>>     print("{} -> {}".format(
+        >>>     print("{0} -> {1}".format(
         >>>         info["source_path"], info["destination_path"))
 
         **External Documentation**
@@ -1441,7 +1447,7 @@ class TransferClient(BaseClient):
         <https://docs.globus.org/api/transfer/task/#get_task_successful_transfers>`_
         in the REST documentation for details.
         """
-        self.logger.info("TransferClient.task_successful_transfers({}, ...)"
+        self.logger.info("TransferClient.task_successful_transfers({0}, ...)"
                          .format(task_id))
 
         resource_path = self.qjoin_path("task", task_id,
@@ -1470,7 +1476,7 @@ class TransferClient(BaseClient):
         in the REST documentation for details.
         """
         self.logger.info(
-            "TransferClient.endpoint_manager_monitored_endpoints({})"
+            "TransferClient.endpoint_manager_monitored_endpoints({0})"
             .format(params))
         path = self.qjoin_path('endpoint_manager', 'monitored_endpoints')
         return self.get(path, params=params,
@@ -1492,7 +1498,7 @@ class TransferClient(BaseClient):
         """
         endpoint_id = safe_stringify(endpoint_id)
         self.logger.info(("TransferClient.endpoint_manager_"
-                          "hosted_endpoint_list({})".format(endpoint_id)))
+                          "hosted_endpoint_list({0})".format(endpoint_id)))
         path = self.qjoin_path("endpoint_manager", "endpoint",
                                endpoint_id, "hosted_endpoint_list")
         return self.get(path, params=params,
@@ -1516,7 +1522,7 @@ class TransferClient(BaseClient):
         """
         endpoint_id = safe_stringify(endpoint_id)
         self.logger.info(("TransferClient.endpoint_manager_"
-                          "get_endpoint({})".format(endpoint_id)))
+                          "get_endpoint({0})".format(endpoint_id)))
         path = self.qjoin_path("endpoint_manager", "endpoint", endpoint_id)
         return self.get(path, params=params)
 
@@ -1538,7 +1544,7 @@ class TransferClient(BaseClient):
         """
         endpoint_id = safe_stringify(endpoint_id)
         self.logger.info(("TransferClient.endpoint_manager_"
-                          "endpoint_acl_list({}, ...)".format(endpoint_id)))
+                          "endpoint_acl_list({0}, ...)".format(endpoint_id)))
         path = self.qjoin_path("endpoint_manager", "endpoint",
                                endpoint_id, "access_list")
         return self.get(path, params=params,
@@ -1576,18 +1582,18 @@ class TransferClient(BaseClient):
 
         >>> tc = TransferClient(...)
         >>> for task in tc.endpoint_manager_task_list():
-        >>>     print("Task({}): {} -> {}\n  was submitted by\n  {}".format(
-        >>>         task["task_id"], task["source_endpoint"],
-        >>>         task["destination_endpoint"), task["owner_string"])
+        >>>     print("Task({0}): {1} -> {2}\n  was submitted by\n  {3}"
+        >>>         .format(task["task_id"], task["source_endpoint"],
+        >>>                 task["destination_endpoint"), task["owner_string"])
 
         Do that same operation on *all* tasks visible via ``activity_monitor``
         status:
 
         >>> tc = TransferClient(...)
         >>> for task in tc.endpoint_manager_task_list(num_results=None):
-        >>>     print("Task({}): {} -> {}\n  was submitted by\n  {}".format(
-        >>>         task["task_id"], task["source_endpoint"],
-        >>>         task["destination_endpoint"), task["owner_string"])
+        >>>     print("Task({0}): {1} -> {2}\n  was submitted by\n  {3}"
+        >>>         .format(task["task_id"], task["source_endpoint"],
+        >>>                 task["destination_endpoint"), task["owner_string"])
 
         **External Documentation**
 
@@ -1622,7 +1628,7 @@ class TransferClient(BaseClient):
         """
         task_id = safe_stringify(task_id)
         self.logger.info(("TransferClient.endpoint_manager_"
-                          "get_task({}, ...)".format(task_id)))
+                          "get_task({0}, ...)".format(task_id)))
         path = self.qjoin_path("endpoint_manager", "task", task_id)
         return self.get(path, params=params)
 
@@ -1662,7 +1668,7 @@ class TransferClient(BaseClient):
         """
         task_id = safe_stringify(task_id)
         self.logger.info(("TransferClient.endpoint_manager_"
-                          "task_event_list({}, ...)".format(task_id)))
+                          "task_event_list({0}, ...)".format(task_id)))
         path = self.qjoin_path("endpoint_manager", "task",
                                task_id, "event_list")
         return PaginatedResource(
@@ -1689,7 +1695,7 @@ class TransferClient(BaseClient):
         """
         task_id = safe_stringify(task_id)
         self.logger.info(("TransferClient.endpoint_manager_"
-                         "task_pause_info({}, ...)".format(task_id)))
+                         "task_pause_info({0}, ...)".format(task_id)))
         path = self.qjoin_path("endpoint_manager", "task",
                                task_id, "pause_info")
         return self.get(path, params=params)
@@ -1729,7 +1735,7 @@ class TransferClient(BaseClient):
         """
         task_id = safe_stringify(task_id)
         self.logger.info(("TransferClient.endpoint_manager_task_"
-                          "successful_transfers({}, ...)".format(task_id)))
+                          "successful_transfers({0}, ...)".format(task_id)))
 
         resource_path = self.qjoin_path("endpoint_manager", "task", task_id,
                                         "successful_transfers")
@@ -1769,7 +1775,7 @@ class TransferClient(BaseClient):
         task_ids = [safe_stringify(i) for i in task_ids]
         message = safe_stringify(message)
         self.logger.info(("TransferClient.endpoint_manager_"
-                          "cancel_tasks({},{})".format(task_ids, message)))
+                          "cancel_tasks({0},{1})".format(task_ids, message)))
         json_body = {
             "message": safe_stringify(message),
             "task_id_list": task_ids
@@ -1803,7 +1809,7 @@ class TransferClient(BaseClient):
         in the REST documentation for details.
         """
         self.logger.info(("TransferClient.endpoint_manager_"
-                          "cancel_status({})".format(admin_cancel_id)))
+                          "cancel_status({0})".format(admin_cancel_id)))
         path = self.qjoin_path("endpoint_manager", "admin_cancel",
                                admin_cancel_id)
         return self.get(path, params=params)
@@ -1839,7 +1845,7 @@ class TransferClient(BaseClient):
         task_ids = [safe_stringify(i) for i in task_ids]
         message = safe_stringify(message)
         self.logger.info(("TransferClient.endpoint_manager_"
-                          "pause_tasks({},{})".format(task_ids, message)))
+                          "pause_tasks({0},{1})".format(task_ids, message)))
         json_body = {
             "message": safe_stringify(message),
             "task_id_list": task_ids
@@ -1874,7 +1880,7 @@ class TransferClient(BaseClient):
         """
         task_ids = [safe_stringify(i) for i in task_ids]
         self.logger.info(("TransferClient.endpoint_manager_"
-                          "resume_tasks({})".format(task_ids)))
+                          "resume_tasks({0})".format(task_ids)))
         json_body = {
             "task_id_list": task_ids
         }
@@ -1984,7 +1990,7 @@ class TransferClient(BaseClient):
         """
         pause_rule_id = safe_stringify(pause_rule_id)
         self.logger.info(("TransferClient.endpoint_manager_"
-                          "get_pause_rule({})".format(pause_rule_id)))
+                          "get_pause_rule({0})".format(pause_rule_id)))
         path = self.qjoin_path("endpoint_manager", "pause_rule", pause_rule_id)
         return self.get(path, params=params)
 
@@ -2018,7 +2024,7 @@ class TransferClient(BaseClient):
         """
         pause_rule_id = safe_stringify(pause_rule_id)
         self.logger.info(("TransferClient.endpoint_manager_"
-                          "update_pause_rule({})".format(pause_rule_id)))
+                          "update_pause_rule({0})".format(pause_rule_id)))
         path = self.qjoin_path("endpoint_manager", "pause_rule", pause_rule_id)
         return self.put(path, data)
 
@@ -2050,6 +2056,6 @@ class TransferClient(BaseClient):
         """
         pause_rule_id = safe_stringify(pause_rule_id)
         self.logger.info(("TransferClient.endpoint_manager_"
-                          "delete_pause_rule({})".format(pause_rule_id)))
+                          "delete_pause_rule({0})".format(pause_rule_id)))
         path = self.qjoin_path("endpoint_manager", "pause_rule", pause_rule_id)
         return self.delete(path, params=params)

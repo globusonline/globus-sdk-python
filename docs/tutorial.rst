@@ -136,7 +136,7 @@ the Globus Transfer service.
     # high level interface; provides iterators for list responses
     print("My Endpoints:")
     for ep in tc.endpoint_search(filter_scope="my-endpoints"):
-        print("[{}] {}".format(ep["id"], ep["display_name"]))
+        print("[{0}] {1}".format(ep["id"], ep["display_name"]))
 
 
 Note that the ``TRANSFER_TOKEN`` is only valid for a limited time. You'll have

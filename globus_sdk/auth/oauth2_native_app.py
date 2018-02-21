@@ -37,7 +37,7 @@ def make_native_app_challenge(verifier=None):
     if verifier:
         if not 43 <= len(verifier) <= 128:
             raise GlobusSDKUsageError(
-                'verifier must be 43-128 characters long: {}'.format(
+                'verifier must be 43-128 characters long: {0}'.format(
                     len(verifier)))
         if bool(re.search(r'[^a-zA-Z0-9~_.-]', verifier)):
             raise GlobusSDKUsageError('verifier contained invalid characters')
@@ -113,7 +113,7 @@ class GlobusNativeAppFlowManager(GlobusOAuthFlowManager):
         # set client_id, then check for validity
         self.client_id = auth_client.client_id
         if not self.client_id:
-            logger.error('Invalid auth_client ID to start Native App Flow: {}'
+            logger.error('Invalid auth_client ID to start Native App Flow: {0}'
                          .format(self.client_id))
             raise GlobusSDKUsageError(
                 'Invalid value for client_id. Got "{0}"'
@@ -141,15 +141,16 @@ class GlobusNativeAppFlowManager(GlobusOAuthFlowManager):
         self.prefill_named_grant = prefill_named_grant
 
         logger.debug('Starting Native App Flow with params:')
-        logger.debug('auth_client.client_id={}'.format(auth_client.client_id))
-        logger.debug('redirect_uri={}'.format(self.redirect_uri))
-        logger.debug('refresh_tokens={}'.format(refresh_tokens))
-        logger.debug('state={}'.format(state))
-        logger.debug('requested_scopes={}'.format(self.requested_scopes))
-        logger.debug('verifier=<REDACTED>,challenge={}'.format(self.challenge))
+        logger.debug('auth_client.client_id={0}'.format(auth_client.client_id))
+        logger.debug('redirect_uri={0}'.format(self.redirect_uri))
+        logger.debug('refresh_tokens={0}'.format(refresh_tokens))
+        logger.debug('state={0}'.format(state))
+        logger.debug('requested_scopes={0}'.format(self.requested_scopes))
+        logger.debug('verifier=<REDACTED>,challenge={0}'
+                     .format(self.challenge))
 
         if prefill_named_grant is not None:
-            logger.debug('prefill_named_grant={}'.format(
+            logger.debug('prefill_named_grant={0}'.format(
                 self.prefill_named_grant))
 
     def get_authorize_url(self, additional_params=None):
@@ -173,9 +174,9 @@ class GlobusNativeAppFlowManager(GlobusOAuthFlowManager):
         """
         authorize_base_url = slash_join(self.auth_client.base_url,
                                         '/v2/oauth2/authorize')
-        logger.debug('Building authorization URI. Base URL: {}'
+        logger.debug('Building authorization URI. Base URL: {0}'
                      .format(authorize_base_url))
-        logger.debug('additional_params={}'.format(additional_params))
+        logger.debug('additional_params={0}'.format(additional_params))
 
         params = {
             'client_id': self.client_id,

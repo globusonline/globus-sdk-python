@@ -45,7 +45,7 @@ class ConfidentialAppAuthClient(AuthClient):
             self, client_id=client_id,
             authorizer=BasicAuthorizer(client_id, client_secret),
             **kwargs)
-        self.logger.info('Finished initializing client, client_id={}'
+        self.logger.info('Finished initializing client, client_id={0}'
                          .format(client_id))
 
     def oauth2_client_credentials_tokens(self, requested_scopes=None):

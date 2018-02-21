@@ -68,11 +68,11 @@ class GlobusAuthorizationCodeFlowManager(GlobusOAuthFlowManager):
         self.state = state
 
         logger.debug('Starting Authorization Code Flow with params:')
-        logger.debug('auth_client.client_id={}'.format(auth_client.client_id))
-        logger.debug('redirect_uri={}'.format(redirect_uri))
-        logger.debug('refresh_tokens={}'.format(refresh_tokens))
-        logger.debug('state={}'.format(state))
-        logger.debug('requested_scopes={}'.format(self.requested_scopes))
+        logger.debug('auth_client.client_id={0}'.format(auth_client.client_id))
+        logger.debug('redirect_uri={0}'.format(redirect_uri))
+        logger.debug('refresh_tokens={0}'.format(refresh_tokens))
+        logger.debug('state={0}'.format(state))
+        logger.debug('requested_scopes={0}'.format(self.requested_scopes))
 
     def get_authorize_url(self, additional_params=None):
         """
@@ -95,9 +95,9 @@ class GlobusAuthorizationCodeFlowManager(GlobusOAuthFlowManager):
         """
         authorize_base_url = slash_join(self.auth_client.base_url,
                                         '/v2/oauth2/authorize')
-        logger.debug('Building authorization URI. Base URL: {}'
+        logger.debug('Building authorization URI. Base URL: {0}'
                      .format(authorize_base_url))
-        logger.debug('additional_params={}'.format(additional_params))
+        logger.debug('additional_params={0}'.format(additional_params))
 
         params = {
             'client_id': self.client_id,

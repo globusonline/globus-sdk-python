@@ -43,7 +43,7 @@ class GlobusResponse(object):
         try:
             return data[key]
         except TypeError:
-            logger.error("Can't index into responses of type {}"
+            logger.error("Can't index into responses of type {0}"
                          .format(type(self)))
             # re-raise with an altered message -- the issue is that whatever
             # type of GlobusResponse you're working with doesn't support
