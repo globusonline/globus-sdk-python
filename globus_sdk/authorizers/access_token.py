@@ -19,7 +19,7 @@ class AccessTokenAuthorizer(GlobusAuthorizer):
     def __init__(self, access_token):
         logger.info(("Setting up an AccessTokenAuthorizer. It will use an "
                      "auth type of Bearer and cannot handle 401s."))
-        logger.debug('Bearer token ends in "...{}" (last 5 chars)'
+        logger.debug('Bearer token ends in "...{0}" (last 5 chars)'
                      .format(access_token[-5:]))
         self.access_token = access_token
         self.header_val = "Bearer %s" % access_token
@@ -30,6 +30,6 @@ class AccessTokenAuthorizer(GlobusAuthorizer):
         "Bearer <access_token>"
         """
         logger.debug(("Setting AccessToken Authorization Header: "
-                      '"Bearer ...{}" (last 5 chars)')
+                      '"Bearer ...{0}" (last 5 chars)')
                      .format(self.header_val[-5:]))
         header_dict['Authorization'] = self.header_val

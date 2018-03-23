@@ -136,7 +136,7 @@ class AuthClient(BaseClient):
         if ids:
             params['ids'] = _convert_listarg(ids)
 
-        self.logger.debug('params={}'.format(params))
+        self.logger.debug('params={0}'.format(params))
 
         if 'usernames' in params and 'ids' in params:
             self.logger.warn(('get_identities call with both usernames and '
@@ -168,7 +168,7 @@ class AuthClient(BaseClient):
                  'AuthClient to resolve'))
         auth_url = self.current_oauth2_flow_manager.get_authorize_url(
             additional_params=additional_params)
-        self.logger.info('Got authorization URL: {}'.format(auth_url))
+        self.logger.info('Got authorization URL: {0}'.format(auth_url))
         return auth_url
 
     def oauth2_exchange_code_for_tokens(self, auth_code):
@@ -381,8 +381,9 @@ class AuthClient(BaseClient):
 
         >>> ac = AuthClient(...)
         >>> info = ac.oauth2_userinfo()
-        >>> print('Effective Identity "{}" has Full Name "{}" and Email "{}"'
-        >>>       .format(info["sub"], info["name"], info["email"]))
+        >>> print(
+        >>>     'Effective Identity "{0}" has Full Name "{1}" and Email "{2}"'
+        >>>     .format(info["sub"], info["name"], info["email"]))
 
         **External Documentation**
 

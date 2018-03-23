@@ -71,10 +71,10 @@ For example, after running the code above,
 
     authorizer = globus_sdk.AccessTokenAuthorizer(globus_transfer_token)
     tc = globus_sdk.TransferClient(authorizer=authorizer)
-    print("Endpoints Belonging to {}@clients.auth.globus.org:"
+    print("Endpoints Belonging to {0}@clients.auth.globus.org:"
           .format(CLIENT_ID))
     for ep in tc.endpoint_search(filter_scope="my-endpoints"):
-        print("[{}] {}".format(ep["id"], ep["display_name"]))
+        print("[{0}] {1}".format(ep["id"], ep["display_name"]))
 
 Note that we're doing a search for "my endpoints", but we refer to the results
 as belonging to ``<CLIENT_ID>@clients.auth.globus.org``. The "current user" is
@@ -121,7 +121,7 @@ Use it like so:
     transfer_client = globus_sdk.TransferClient(authorizer=cc_authorizer)
 
     # usage is still the same
-    print("Endpoints Belonging to {}@clients.auth.globus.org:"
+    print("Endpoints Belonging to {0}@clients.auth.globus.org:"
           .format(CLIENT_ID))
     for ep in tc.endpoint_search(filter_scope="my-endpoints"):
-        print("[{}] {}".format(ep["id"], ep["display_name"]))
+        print("[{0}] {1}".format(ep["id"], ep["display_name"]))

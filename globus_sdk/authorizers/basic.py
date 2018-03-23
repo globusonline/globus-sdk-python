@@ -25,7 +25,7 @@ class BasicAuthorizer(GlobusAuthorizer):
     def __init__(self, username, password):
         logger.info(("Setting up a BasicAuthorizer. It will use an "
                      "auth type of Basic and cannot handle 401s."))
-        logger.info("BasicAuthorizer.username = {}".format(username))
+        logger.info("BasicAuthorizer.username = {0}".format(username))
         self.username = username
         self.password = password
 
@@ -38,5 +38,5 @@ class BasicAuthorizer(GlobusAuthorizer):
         "Basic <base64 encoded username:password>"
         """
         logger.debug(("Setting Basic Authorization Header: "
-                      '"Basic <{}:SECRET>"').format(self.username))
+                      '"Basic <{0}:SECRET>"').format(self.username))
         header_dict['Authorization'] = self.header_val

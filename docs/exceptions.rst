@@ -40,8 +40,8 @@ unexpected API conditions, you'll want to look for ``NetworkError`` and
         # Error response from the REST service, check the code and message for
         # details.
         logging.error(("Got a Globus API Error\n"
-                       "Error Code: {}\n"
-                       "Error Message: {}").format(e.code, e.message))
+                       "Error Code: {0}\n"
+                       "Error Message: {0}").format(e.code, e.message))
         raise e
     except NetworkError:
         logging.error(("Network Failure. "

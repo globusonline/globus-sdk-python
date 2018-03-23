@@ -53,4 +53,18 @@ __all__ = (
 # configure logging for a library, per python best practices:
 # https://docs.python.org/3/howto/logging.html#configuring-logging-for-a-library
 # NB: this won't work on py2.6 because `logging.NullHandler` wasn't added yet
-logging.getLogger('globus_sdk').addHandler(logging.NullHandler())
+try:
+    nullhandler = logging.NullHandler()
+except AttributeError:
+    class MyNullHandler(logging.Handler):
+        def emit(self, record):
+            pass
+
+        def handle(self, record):
+            pass
+
+        def createLock(self):
+            self.lock = None
+
+    nullhandler = MyNullHandler()
+logging.getLogger('globus_sdk').addHandler(nullhandler)

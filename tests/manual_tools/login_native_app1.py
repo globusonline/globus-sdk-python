@@ -15,7 +15,7 @@ client.oauth2_start_flow(requested_scopes=SCOPES,
                          refresh_tokens=True)
 url = client.oauth2_get_authorize_url()
 
-print("Native App Authorization URL: \n{}".format(url))
+print("Native App Authorization URL: \n{0}".format(url))
 auth_code = get_input("Enter the auth code: ").strip()
 
 token_res = client.oauth2_exchange_code_for_tokens(auth_code)
@@ -26,7 +26,7 @@ auth_token = tokens["auth.globus.org"]["refresh_token"]
 id_token = token_res["id_token"]
 access_token = token_res["access_token"]
 
-print("Transfer Refresh Token: {}".format(transfer_token))
-print("Auth Refresh Token    : {}".format(auth_token))
-print("Openid id_token       : {}".format(id_token))
-print("Access Token          : {}".format(access_token))
+print("Transfer Refresh Token: {0}".format(transfer_token))
+print("Auth Refresh Token    : {0}".format(auth_token))
+print("Openid id_token       : {0}".format(id_token))
+print("Access Token          : {0}".format(access_token))

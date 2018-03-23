@@ -100,7 +100,7 @@ class GlobusAPIError(GlobusError):
             if len(data["errors"]) != 1:
                 logger.warn(("Doing JSON load of error response with multiple "
                              "errors. Exception data will only include the "
-                             "first error, but there are really {} errors")
+                             "first error, but there are really {0} errors")
                             .format(len(data["errors"])))
             # TODO: handle responses with more than one error
             data = data["errors"][0]
@@ -185,7 +185,7 @@ class AuthAPIError(GlobusAPIError):
             if len(data["errors"]) != 1:
                 logger.warn(("Doing JSON load of error response with multiple "
                              "errors. Exception data will only include the "
-                             "first error, but there are really {} errors")
+                             "first error, but there are really {0} errors")
                             .format(len(data["errors"])))
             # TODO: handle responses with more than one error
             data = data["errors"][0]

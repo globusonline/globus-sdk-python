@@ -50,7 +50,7 @@ class RefreshTokenAuthorizer(RenewingAuthorizer):
                  access_token=None, expires_at=None, on_refresh=None):
         logger.info((
             "Setting up RefreshTokenAuthorizer with auth_client = "
-            "instance: {}".format(id(auth_client))))
+            "instance: {0}".format(id(auth_client))))
 
         # required for _get_token_data
         self.refresh_token = refresh_token

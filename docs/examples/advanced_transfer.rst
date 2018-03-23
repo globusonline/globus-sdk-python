@@ -103,7 +103,7 @@ retry logic from the core task submission logic.
                     must be run inside an exception handler
             """
             if retries < 1:
-                logger.error('Retried {} too many times.'
+                logger.error('Retried {0} too many times.'
                              .format(func_name))
                 raise
 
@@ -112,12 +112,12 @@ retry logic from the core task submission logic.
         except NetworkError:
             # log with exc_info=True to capture a full stacktrace as a
             # debug-level log
-            logger.debug(('Globus func {} experienced a network error'
+            logger.debug(('Globus func {0} experienced a network error'
                           .format(func_name)), exc_info=True)
             check_for_reraise()
         except GlobusAPIError:
             # again, log with exc_info=True to capture a full stacktrace
-            logger.warn(('Globus func {} experienced a network error'
+            logger.warn(('Globus func {0} experienced a network error'
                          .format(func_name)), exc_info=True)
             check_for_reraise()
 

@@ -50,7 +50,7 @@ class RenewingAuthorizer(GlobusAuthorizer):
         if expires_at is not None and self.access_token is not None:
             logger.info(("Got both expires_at and access_token. "
                          "Will start by using "
-                         "RenewingAuthorizer.access_token = ...{} "
+                         "RenewingAuthorizer.access_token = ...{0} "
                          "(last 5 chars)")
                         .format(self.access_token[-5:]))
             self._set_expiration_time(expires_at)
@@ -82,7 +82,7 @@ class RenewingAuthorizer(GlobusAuthorizer):
         Set the expiration time adjusting for potential network delays.
         """
         self.expires_at = expires_at - EXPIRES_ADJUST_SECONDS
-        logger.debug(("Adjusted expiration time down to {} to account for "
+        logger.debug(("Adjusted expiration time down to {0} to account for "
                       "potential delays.")
                      .format(self.expires_at))
 
@@ -99,7 +99,7 @@ class RenewingAuthorizer(GlobusAuthorizer):
         self.access_token = token_data['access_token']
 
         logger.info(("RenewingAuthorizer.access_token updated to "
-                     '"...{}" (last 5 chars)')
+                     '"...{0}" (last 5 chars)')
                     .format(self.access_token[-5:]))
 
         if callable(self.on_refresh):
@@ -128,7 +128,7 @@ class RenewingAuthorizer(GlobusAuthorizer):
         """
         self._check_expiration_time()
         logger.debug(("Setting RefreshToken Authorization Header:"
-                      '"Bearer ...{}" (last 5 chars)')
+                      '"Bearer ...{0}" (last 5 chars)')
                      .format(self.access_token[-5:]))
         header_dict['Authorization'] = "Bearer %s" % self.access_token
 

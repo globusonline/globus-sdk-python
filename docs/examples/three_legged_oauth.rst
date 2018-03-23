@@ -179,8 +179,8 @@ Globus Auth beforehand:
         # there is no tool to help build this (yet!)
         globus_logout_url = (
             'https://auth.globus.org/v2/web/logout' +
-            '?client={}'.format(app.config['PORTAL_CLIENT_ID']) +
-            '&redirect_uri={}'.format(redirect_uri) +
+            '?client={0}'.format(app.config['PORTAL_CLIENT_ID']) +
+            '&redirect_uri={0}'.format(redirect_uri) +
             '&redirect_name=Globus Example App')
 
         # Redirect the user to the Globus Auth logout page
@@ -202,4 +202,4 @@ For example, one might do the following:
 
     print("Endpoints belonging to the current logged-in user:")
     for ep in transfer_client.endpoint_search(filter_scope="my-endpoints"):
-        print("[{}] {}".format(ep["id"], ep["display_name"]))
+        print("[{0}] {1}".format(ep["id"], ep["display_name"]))

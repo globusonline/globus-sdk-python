@@ -87,10 +87,10 @@ class GlobusConfigParser(object):
         # *first* for a value -- env values have higher precedence than config
         # files so that you can locally override the behavior of a command in a
         # given shell or subshell
-        env_option_name = 'GLOBUS_SDK_{}'.format(option.upper())
+        env_option_name = 'GLOBUS_SDK_{0}'.format(option.upper())
         value = None
         if check_env and env_option_name in os.environ:
-            logger.debug("Getting config value from environment: {}={}"
+            logger.debug("Getting config value from environment: {0}={1}"
                          .format(env_option_name, value))
             value = os.environ[env_option_name]
         else:
@@ -98,7 +98,7 @@ class GlobusConfigParser(object):
                 value = self._parser.get(section, option)
             except (NoOptionError, NoSectionError):
                 if failover_to_general:
-                    logger.debug("Config lookup of [{}]:{} failed, checking "
+                    logger.debug("Config lookup of [{0}]:{1} failed, checking "
                                  "[general] for a value as well"
                                  .format(section, option))
                     value = self.get(option,
@@ -126,7 +126,7 @@ _parser = None
 
 
 def get_service_url(environment, service):
-    logger.debug("Service URL Lookup for \"{}\" under env \"{}\""
+    logger.debug("Service URL Lookup for \"{0}\" under env \"{1}\""
                  .format(service, environment))
     p = _get_parser()
     option = service + "_service"
@@ -134,11 +134,11 @@ def get_service_url(environment, service):
     url = p.get(option, environment=environment)
     if url is None:
         raise GlobusSDKUsageError(
-            ('Failed to find a url for service "{}" in environment "{}". '
+            ('Failed to find a url for service "{0}" in environment "{1}". '
              "Please double-check that GLOBUS_SDK_ENVIRONMENT is set "
              "correctly, or not set at all")
             .format(service, environment))
-    logger.debug("Service URL Lookup Result: \"{}\" is at \"{}\""
+    logger.debug("Service URL Lookup Result: \"{0}\" is at \"{1}\""
                  .format(service, url))
     return url
 
@@ -150,7 +150,7 @@ def get_http_timeout(environment):
                   type_cast=float)
     if value is None:
         value = 60
-    logger.debug('default http_timeout set to {}'.format(value))
+    logger.debug('default http_timeout set to {0}'.format(value))
     return value
 
 
@@ -161,7 +161,7 @@ def get_ssl_verify(environment):
                   type_cast=_bool_cast)
     if value is None:
         return True
-    logger.debug('ssl_verify set to {}'.format(value))
+    logger.debug('ssl_verify set to {0}'.format(value))
     return value
 
 
@@ -171,7 +171,7 @@ def _bool_cast(value):
         return True
     elif value in ("0", "no", "false", "off"):
         return False
-    logger.error('Value "{}" can\'t cast to bool'.format(value))
+    logger.error('Value "{0}" can\'t cast to bool'.format(value))
     raise ValueError("Invalid config bool")
 
 
@@ -187,5 +187,5 @@ def get_default_environ():
         env = 'default'
     if env != 'default':
         logger.info(('On lookup, non-default environment: '
-                     'GLOBUS_SDK_ENVIRONMENT={}'.format(env)))
+                     'GLOBUS_SDK_ENVIRONMENT={0}'.format(env)))
     return env

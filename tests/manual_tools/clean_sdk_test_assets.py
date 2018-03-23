@@ -22,7 +22,7 @@ def clean():
     client.oauth2_start_flow(requested_scopes=SCOPES)
     url = client.oauth2_get_authorize_url()
 
-    print("Login with SDK Tester: \n{}".format(url))
+    print("Login with SDK Tester: \n{0}".format(url))
     auth_code = get_input("Enter auth code: ").strip()
 
     # get tokens and make a transfer client
@@ -57,7 +57,7 @@ def clean():
         r = tc.operation_ls(ep_id)
         for item in r:
             ddata.add_item("/~/" + item["name"])
-            print("deleting {}: {}".format(item["type"], item["name"]))
+            print("deleting {0}: {1}".format(item["type"], item["name"]))
             file_deletions += 1
         if len(ddata["DATA"]):
             r = tc.submit_delete(ddata)
@@ -68,7 +68,7 @@ def clean():
     r = tc.bookmark_list()
     for bookmark in r:
         tc.delete_bookmark(bookmark["id"])
-        print("deleting bookmark: {}".format(bookmark["name"]))
+        print("deleting bookmark: {0}".format(bookmark["name"]))
         bookmark_deletions += 1
 
     # clean endpoints owned by SDK Tester
@@ -79,7 +79,7 @@ def clean():
         r = tc.endpoint_search(filter_scope="my-endpoints", num_results=None)
         for ep in r:
             tc.delete_endpoint(ep["id"])
-            print("deleting endpoint: {}".format(ep["display_name"]))
+            print("deleting endpoint: {0}".format(ep["display_name"]))
             endpoint_deletions += 1
             cleaning = True
 
@@ -87,9 +87,9 @@ def clean():
     for task_id in task_ids:
         tc.task_wait(task_id, polling_interval=1)
 
-    print("{} files or folders cleaned".format(file_deletions))
-    print("{} endpoints cleaned".format(endpoint_deletions))
-    print("{} bookmarks cleaned".format(bookmark_deletions))
+    print("{0} files or folders cleaned".format(file_deletions))
+    print("{0} endpoints cleaned".format(endpoint_deletions))
+    print("{0} bookmarks cleaned".format(bookmark_deletions))
 
 
 if __name__ == "__main__":
