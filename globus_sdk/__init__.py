@@ -1,6 +1,11 @@
 import logging
 
-from globus_sdk.auth import AuthClient, ConfidentialAppAuthClient, NativeAppAuthClient
+from globus_sdk.auth import (
+    AuthClient,
+    ConfidentialAppAuthClient,
+    NativeAppAuthClient,
+    native_auth,
+)
 from globus_sdk.authorizers import (
     AccessTokenAuthorizer,
     BasicAuthorizer,
@@ -48,6 +53,7 @@ __all__ = (
     "ClientCredentialsAuthorizer",
     "AuthClient",
     "NativeAppAuthClient",
+    "native_auth",
     "ConfidentialAppAuthClient",
     "TransferClient",
     "TransferData",

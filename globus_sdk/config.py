@@ -44,11 +44,13 @@ class GlobusConfigParser(object):
     """
 
     _GENERAL_CONF_SECTION = "general"
+    DEFAULT_WRITE_PATH = os.path.expanduser("~/.globus-native-apps.cfg")
 
     def __init__(self):
         logger.debug("Loading SDK Config parser")
         self._parser = ConfigParser()
         self._load_config()
+        self._write_path = self.DEFAULT_WRITE_PATH
         logger.debug("Config load succeeded")
 
     def _load_config(self):
@@ -134,6 +136,86 @@ class GlobusConfigParser(object):
 
         return value
 
+    def get_section(self, section):
+        """Attempt to lookup a section in the config file. Returns None
+        if no section is found."""
+        if self._parser.has_section(section):
+            return dict(self._parser.items(section))
+
+    def set_write_config_file(self, filename):
+        """Set a new config file for writing to disk. Attempts to load
+        the new config if one exists but will not raise an error if this
+        fails. Future config values will be written to this location."""
+        logger.debug("New config file set to: {}".format(filename))
+        try:
+            self._parser.read([filename])
+        except Exception:
+            logger.debug("New config failed to load: {}".format(filename))
+        self._write_path = filename
+
+    def _get_write_config(self):
+        """Get the config for the current configured self._write_path. If it
+        does not exist, an empty config is returned instead. General config
+        values will not be included in the returned config so they aren't
+        copied and written to disk.
+        """
+        if self._write_path is None:
+            raise GlobusError(
+                "Failed to write to the config file {}, please ensure you "
+                "have write access.".format(self._write_path)
+            )
+
+        cfg = ConfigParser()
+        if not os.path.exists(self._write_path):
+            cfg[self._GENERAL_CONF_SECTION] = {}
+        else:
+            cfg.read(self._write_path)
+
+        return cfg
+
+    def _save(self, cfg):
+        """Saves config options to disk at the file self._write_path. The
+        config file permissions are also always set to only allow User access
+        to the config file for a little bit of added security."""
+
+        # deny rwx to Group and World -- don't bother storing the returned
+        # old mask value, since we'll never restore it anyway
+        # do this on every call to ensure that we're always consistent about it
+        os.umask(0o077)
+        with open(self._write_path, "w") as configfile:
+            cfg.write(configfile)
+
+    def set(self, option, value, section):
+        """
+        Write an option to disk using the previously configured config
+        at set_config_file() or .globus.cfg. Creates the section if it does
+        not exist.
+        """
+        cfg = self._get_write_config()
+
+        # add the section if absent
+        if section not in cfg.sections():
+            cfg.add_section(section)
+
+        cfg.set(section, option, value)
+        self._save(cfg)
+
+        # Update the Global config
+        if section not in self._parser.sections():
+            self._parser.add_section(section)
+        self._parser.set(section, option, value)
+
+    def remove(self, option, section):
+        """
+        Remove an option from the config. True if option previously existed,
+        false otherwise.
+        """
+        cfg = self._get_write_config()
+        removed = cfg.remove_option(section, option)
+        self._save(cfg)
+        self._parser.remove_option(section, option)
+        return removed
+
 
 def _get_parser():
     """
@@ -144,6 +226,14 @@ def _get_parser():
     if _parser is None:
         _parser = GlobusConfigParser()
     return _parser
+
+
+def get_parser():
+    """
+    Historically components only needed read-only access. Since token storage,
+    new components may need to lookup config values or occasionally save data
+    """
+    return _get_parser()
 
 
 # at import-time, it's None

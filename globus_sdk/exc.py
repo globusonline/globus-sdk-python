@@ -271,6 +271,22 @@ class GlobusConnectionError(NetworkError):
     """A connection error occured while making a REST request."""
 
 
+class ConfigError(GlobusError):
+    """An error reading or writing from the configuration file."""
+
+
+class RequestedScopesMismatch(ConfigError):
+    """Requested scopes differ from scopes saved to config."""
+
+
+class LoadedTokensExpired(ConfigError):
+    """Tokens loaded from disk have expired since last login."""
+
+
+class LocalServerError(GlobusError):
+    """Error encountered with local server used for native auth."""
+
+
 def convert_request_exception(exc):
     """Converts incoming requests.Exception to a Globus NetworkError"""
 

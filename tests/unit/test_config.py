@@ -1,5 +1,6 @@
 import os
 from contextlib import contextmanager
+from tempfile import NamedTemporaryFile
 
 import pytest
 import six
@@ -282,3 +283,38 @@ def test_get_globus_environ_production():
         del os.environ["GLOBUS_SDK_ENVIRONMENT"]
         # ensure that passing a value returns that value
         assert globus_sdk.config.get_globus_environ("production") == "default"
+
+
+def test_verify_set_config_file():
+    new_config = NamedTemporaryFile()
+    with custom_config(""):
+        cfg = globus_sdk.config.get_parser()
+        cfg.set_write_config_file(new_config.name)
+        assert cfg._write_path == new_config.name
+
+
+def test_verify_load_from_new_config_file():
+    with custom_config(""), NamedTemporaryFile(mode="w+") as new_cfg:
+        new_cfg.file.write("[default]\noption = general_value\n")
+        new_cfg.file.flush()
+
+        cfg = globus_sdk.config.get_parser()
+        cfg.set_write_config_file(new_cfg.name)
+        assert cfg.get("option", "default") == "general_value"
+
+
+def test_verify_write_config_option(temp_config):
+    with custom_config(""):
+        temp_config.set("foo", "bar", "mysec")
+        assert temp_config.get("foo", "mysec") == "bar"
+
+        temp_config.set("baz", "car", "new_sec")
+        assert temp_config.get("baz", "new_sec") == "car"
+
+
+def test_verify_remove_config_option(temp_config):
+    with custom_config(""):
+        temp_config.set("foo", "bar", "mysec")
+        assert temp_config.get("foo", "mysec") == "bar"
+        temp_config.remove("foo", "mysec")
+        assert temp_config.get("foo", "mysec") is None
