@@ -1542,7 +1542,7 @@ class TransferClient(BaseClient):
         >>> task_id = ...
         >>> for info in tc.task_successful_transfers(task_id):
         >>>     print("{} -> {}".format(
-        >>>         info["source_path"], info["destination_path"))
+        >>>         info["source_path"], info["destination_path"]))
 
         **External Documentation**
 
@@ -1700,7 +1700,7 @@ class TransferClient(BaseClient):
         >>> for task in tc.endpoint_manager_task_list():
         >>>     print("Task({}): {} -> {}\n  was submitted by\n  {}".format(
         >>>         task["task_id"], task["source_endpoint"],
-        >>>         task["destination_endpoint"), task["owner_string"])
+        >>>         task["destination_endpoint"], task["owner_string"]))
 
         Do that same operation on *all* tasks visible via ``activity_monitor``
         status:
@@ -1709,7 +1709,7 @@ class TransferClient(BaseClient):
         >>> for task in tc.endpoint_manager_task_list(num_results=None):
         >>>     print("Task({}): {} -> {}\n  was submitted by\n  {}".format(
         >>>         task["task_id"], task["source_endpoint"],
-        >>>         task["destination_endpoint"), task["owner_string"])
+        >>>         task["destination_endpoint"], task["owner_string"]))
 
         **External Documentation**
 
