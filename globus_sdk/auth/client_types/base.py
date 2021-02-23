@@ -1,5 +1,8 @@
 import collections
+import json
 import logging
+
+import jwt
 
 from globus_sdk import exc
 from globus_sdk.auth.token_response import OAuthTokenResponse
@@ -384,3 +387,43 @@ class AuthClient(BaseClient):
         """
         self.logger.info("Looking up OIDC-style Userinfo from Globus Auth")
         return self.get("/v2/oauth2/userinfo")
+
+    def get_openid_configuration(self):
+        """
+        Fetch the OpenID Connect configuration data from the well-known URI for Globus
+        Auth.
+        """
+        self.logger.info("Fetching OIDC Config")
+        return self.get("/.well-known/openid-configuration")
+
+    def get_jwk(self, openid_configuration=None, as_pem=False):
+        """
+        Fetch the Globus Auth JWK.
+
+        Returns either a dict or an RSA Public Key object depending on ``as_pem``.
+
+        :param openid_configuration: The OIDC config as a GlobusHTTPResponse or dict.
+            When not provided, it will be fetched automatically.
+        :type openid_configuration: dict or GlobusHTTPResponse
+        :param as_pem: Decode the JWK to an RSA PEM key, typically for JWT decoding
+        :type as_pem: bool
+        """
+        self.logger.info("Fetching JWK")
+        if not openid_configuration:
+            self.logger.debug("No OIDC Config provided, autofetching...")
+            openid_configuration = self.get_openid_configuration()
+
+        jwks_uri = openid_configuration["jwks_uri"]
+        self.logger.debug("jwks_uri=%s", jwks_uri)
+        jwk_data = self.get(jwks_uri).data
+        if not as_pem:
+            self.logger.debug("returning jwk data where as_pem=False")
+            return jwk_data
+        else:
+            self.logger.debug("JWK as_pem=True requested, decoding...")
+            # decode from JWK to an RSA PEM key for JWT decoding
+            jwk_as_pem = jwt.algorithms.RSAAlgorithm.from_jwk(
+                json.dumps(jwk_data["keys"][0])
+            )
+            self.logger.debug("JWK PEM decoding finished successfully")
+            return jwk_as_pem
