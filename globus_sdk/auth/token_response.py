@@ -4,6 +4,7 @@ import time
 
 import jwt
 
+from globus_sdk import exc
 from globus_sdk.response import GlobusHTTPResponse
 
 logger = logging.getLogger(__name__)
@@ -165,6 +166,8 @@ class OAuthTokenResponse(GlobusHTTPResponse):
         """
         Parse the included ID Token (OIDC) as a dict and return it.
 
+        If you provide the `jwk`, you must also provide `openid_configuration`.
+
         :param openid_configuration: The OIDC config as a GlobusHTTPResponse or dict.
             When not provided, it will be fetched automatically.
         :type openid_configuration: dict or GlobusHTTPResponse
@@ -176,6 +179,10 @@ class OAuthTokenResponse(GlobusHTTPResponse):
         auth_client = self._client
 
         if not openid_configuration:
+            if jwk:
+                raise exc.GlobusSDKUsageError(
+                    "passing jwk without openid configuration is not allowed"
+                )
             logger.debug("No OIDC Config provided, autofetching...")
             openid_configuration = auth_client.get_openid_configuration()
 
