@@ -237,10 +237,10 @@ class TransferData(dict):
         :type destination_path: str
         :param recursive: Set to True if the target at source path is a directory
         :type recursive: bool
-        :param external_checksum: A checksum to verify source file integrity before the
-            transfer and destination file integrity after the transfer. Cannot be used
-            with directories. Assumed to be an MD5 checksum unless checksum_algorithm
-            is also given.
+        :param external_checksum: A checksum to verify both source file and destination
+            file integrity. The checksum will be verified after the data transfer and a
+            failure will cause the entire task to fail. Cannot be used with directories.
+            Assumed to be an MD5 checksum unless checksum_algorithm is also given.
         :type external_checksum: str, optional
         :param checksum_algorithm: Specifies the checksum algorithm to be used when
             verify_checksum is True, sync_level is "checksum" or 3, or an
