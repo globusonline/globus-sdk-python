@@ -430,7 +430,12 @@ class BaseClient:
             )
             self.authorizer.set_authorization_header(rheaders)
 
-        url = slash_join(self.base_url, path)
+        # if a client is asked to make a request against a full URL, not just the path
+        # component, then do not resolve the path, simply pass it through as the URL
+        if path.startswith("https://") or path.startswith("http://"):
+            url = path
+        else:
+            url = slash_join(self.base_url, path)
         self.logger.debug(f"request will hit URL:{url}")
 
         # because a 401 can trigger retry, we need to wrap the retry-able thing

@@ -3,8 +3,8 @@ import logging
 import time
 
 import jwt
-import requests
 
+from globus_sdk import exc
 from globus_sdk.response import GlobusHTTPResponse
 
 logger = logging.getLogger(__name__)
@@ -162,32 +162,46 @@ class OAuthTokenResponse(GlobusHTTPResponse):
         """
         return self._by_scopes
 
-    def decode_id_token(self):
+    def decode_id_token(self, openid_configuration=None, jwk=None):
         """
-        A parsed ID Token (OIDC) as a dict.
+        Parse the included ID Token (OIDC) as a dict and return it.
+
+        If you provide the `jwk`, you must also provide `openid_configuration`.
+
+        :param openid_configuration: The OIDC config as a GlobusHTTPResponse or dict.
+            When not provided, it will be fetched automatically.
+        :type openid_configuration: dict or GlobusHTTPResponse
+        :param jwk: The JWK as a cryptography public key object. When not provided, it
+            will be fetched and parsed automatically.
+        :type jwk: RSAPublicKey
         """
-        logger.info('Decoding ID Token "{}"'.format(self["id_token"]))
+        logger.info('Decoding ID Token "%s"', self["id_token"])
         auth_client = self._client
 
-        logger.debug("Fetch JWK Data: Start")
-        oidc_conf = auth_client.get("/.well-known/openid-configuration")
-        jwks_uri = oidc_conf["jwks_uri"]
-        signing_algos = oidc_conf["id_token_signing_alg_values_supported"]
+        if not openid_configuration:
+            if jwk:
+                raise exc.GlobusSDKUsageError(
+                    "passing jwk without openid configuration is not allowed"
+                )
+            logger.debug("No OIDC Config provided, autofetching...")
+            openid_configuration = auth_client.get_openid_configuration()
 
-        # use the auth_client's decision on ssl_verify=yes/no
-        jwk_data = requests.get(jwks_uri, verify=auth_client._verify).json()
-        logger.debug("Fetch JWK Data: Complete")
-        # decode from JWK to an RSA PEM key for JWT decoding
-        jwk_as_pem = jwt.algorithms.RSAAlgorithm.from_jwk(
-            json.dumps(jwk_data["keys"][0])
-        )
+        if not jwk:
+            logger.debug("No JWK provided, autofetching + decoding...")
+            jwk = auth_client.get_jwk(
+                openid_configuration=openid_configuration, as_pem=True
+            )
 
-        return jwt.decode(
+        logger.debug("final step: decode with JWK")
+        signing_algos = openid_configuration["id_token_signing_alg_values_supported"]
+        decoded = jwt.decode(
             self["id_token"],
-            jwk_as_pem,
+            jwk,
             algorithms=signing_algos,
             audience=auth_client.client_id,
         )
+        logger.debug("decode ID token finished successfully")
+        return decoded
 
     def __str__(self):
         # Make printing responses more convenient by only showing the
