@@ -2,11 +2,9 @@ import json
 import sqlite3
 import typing
 
+from globus_sdk.auth import OAuthTokenResponse
 from globus_sdk.tokenstorage.base import FileAdapter
 from globus_sdk.version import __version__
-
-if typing.TYPE_CHECKING:  # conditional imports reduce the risk of dependency cycles
-    from globus_sdk.auth import OAuthTokenResponse
 
 
 class SQLiteAdapter(FileAdapter):
