@@ -9,6 +9,17 @@ class StorageAdapter(metaclass=abc.ABCMeta):
     def store(self, token_response) -> None:
         pass
 
+    @abc.abstractmethod
+    def get_token_data(self, resource_server: str) -> typing.Optional[typing.Dict]:
+        """
+        Lookup token data for a resource server
+
+        Either returns a dict with the access token, refresh token (optional), and
+        expiration time, or returns ``None``, indicating that there was no data for that
+        resource server.
+        """
+        pass
+
     def on_refresh(self, token_response) -> None:
         """
         By default, the on_refresh handler for a token storage adapter simply
@@ -25,10 +36,6 @@ class FileAdapter(StorageAdapter, metaclass=abc.ABCMeta):
     """
 
     filename: str
-
-    @abc.abstractmethod
-    def read_as_dict(self) -> typing.Dict:
-        raise NotImplementedError
 
     def file_exists(self) -> bool:
         """

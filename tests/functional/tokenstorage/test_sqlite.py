@@ -53,7 +53,7 @@ def test_store_and_retrieve(mock_response):
     adapter = SQLiteAdapter(MEMORY_DBNAME)
     adapter.store(mock_response)
 
-    data = adapter.read_as_dict()
+    data = adapter.get_by_resource_server()
     assert data == mock_response.by_resource_server
 
 
@@ -62,7 +62,7 @@ def test_on_refresh_and_retrieve(mock_response):
     adapter = SQLiteAdapter(MEMORY_DBNAME)
     adapter.on_refresh(mock_response)
 
-    data = adapter.read_as_dict()
+    data = adapter.get_by_resource_server()
     assert data == mock_response.by_resource_server
 
 
@@ -71,7 +71,7 @@ def test_multiple_adapters_store_and_retrieve(mock_response, db_filename):
     adapter2 = SQLiteAdapter(db_filename)
     adapter1.store(mock_response)
 
-    data = adapter2.read_as_dict()
+    data = adapter2.get_by_resource_server()
     assert data == mock_response.by_resource_server
 
 
@@ -82,7 +82,7 @@ def test_multiple_adapters_store_and_retrieve_different_namespaces(
     adapter2 = SQLiteAdapter(db_filename, namespace="bar")
     adapter1.store(mock_response)
 
-    data = adapter2.read_as_dict()
+    data = adapter2.get_by_resource_server()
     assert data == {}
 
 
@@ -93,7 +93,8 @@ def test_load_missing_config_data():
 
 def test_load_missing_token_data():
     adapter = SQLiteAdapter(MEMORY_DBNAME)
-    assert adapter.read_as_dict() == {}
+    assert adapter.get_by_resource_server() == {}
+    assert adapter.get_token_data("resource_server_1") is None
 
 
 def test_remove_tokens(mock_response):
@@ -102,7 +103,7 @@ def test_remove_tokens(mock_response):
 
     removed = adapter.remove_tokens_for_resource_server("resource_server_1")
     assert removed
-    data = adapter.read_as_dict()
+    data = adapter.get_by_resource_server()
     assert data == {
         "resource_server_2": mock_response.by_resource_server["resource_server_2"]
     }
@@ -125,3 +126,21 @@ def test_remove_config():
 
     removed = adapter.remove_config("myconf")
     assert not removed
+
+
+def test_store_and_refresh(mock_response, mock_refresh_response):
+    adapter = SQLiteAdapter(MEMORY_DBNAME)
+    adapter.store(mock_response)
+
+    # rs1 and rs2 data was stored correctly
+    data = adapter.get_token_data("resource_server_1")
+    assert data["access_token"] == "access_token_1"
+    data = adapter.get_token_data("resource_server_2")
+    assert data["access_token"] == "access_token_2"
+
+    # "refresh" happens, this should change rs2 but not rs1
+    adapter.store(mock_refresh_response)
+    data = adapter.get_token_data("resource_server_1")
+    assert data["access_token"] == "access_token_1"
+    data = adapter.get_token_data("resource_server_2")
+    assert data["access_token"] == "access_token_2_refreshed"

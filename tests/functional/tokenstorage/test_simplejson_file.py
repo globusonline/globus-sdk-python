@@ -14,59 +14,60 @@ def filename(tempdir):
     return os.path.join(tempdir, "mydata.json")
 
 
-@pytest.mark.parametrize(
-    "success, kwargs",
-    [
-        (False, {}),
-        (False, {"resource_server": "foo", "scopes": ["bar"]}),
-        (True, {"resource_server": "foo"}),
-        (True, {"scopes": ["bar"]}),
-    ],
-)
-def test_constructor(filename, success, kwargs):
-    if success:
-        assert SimpleJSONFileAdapter(filename, **kwargs)
-    else:
-        with pytest.raises(ValueError):
-            SimpleJSONFileAdapter(filename, **kwargs)
-
-
 def test_file_dne(filename):
-    adapter = SimpleJSONFileAdapter(filename, scopes=["x"])
+    adapter = SimpleJSONFileAdapter(filename)
     assert not adapter.file_exists()
 
 
 def test_file_exists(filename):
     open(filename, "w").close()  # open and close to touch
-    adapter = SimpleJSONFileAdapter(filename, scopes=["x"])
+    adapter = SimpleJSONFileAdapter(filename)
     assert adapter.file_exists()
-
-
-def test_read_as_dict(filename):
-    with open(filename, "w") as f:
-        json.dump({"x": 1}, f)
-    adapter = SimpleJSONFileAdapter(filename, scopes=["x"])
-    assert adapter.file_exists()
-
-    d = adapter.read_as_dict()
-
-    assert d == {"x": 1}
 
 
 def test_store(filename, mock_response):
-    adapter = SimpleJSONFileAdapter(filename, resource_server="resource_server_1")
+    adapter = SimpleJSONFileAdapter(filename)
     assert not adapter.file_exists()
     adapter.store(mock_response)
 
     with open(filename) as f:
         data = json.load(f)
     assert data["globus-sdk.version"] == __version__
+    assert data["by_rs"]["resource_server_1"]["access_token"] == "access_token_1"
+    assert data["by_rs"]["resource_server_2"]["access_token"] == "access_token_2"
+
+
+def test_get_token_data(filename, mock_response):
+    adapter = SimpleJSONFileAdapter(filename)
+    assert not adapter.file_exists()
+    adapter.store(mock_response)
+
+    data = adapter.get_token_data("resource_server_1")
     assert data["access_token"] == "access_token_1"
+
+
+def test_store_and_refresh(filename, mock_response, mock_refresh_response):
+    adapter = SimpleJSONFileAdapter(filename)
+    assert not adapter.file_exists()
+    adapter.store(mock_response)
+
+    # rs1 and rs2 data was stored correctly
+    data = adapter.get_token_data("resource_server_1")
+    assert data["access_token"] == "access_token_1"
+    data = adapter.get_token_data("resource_server_2")
+    assert data["access_token"] == "access_token_2"
+
+    # "refresh" happens, this should change rs2 but not rs1
+    adapter.store(mock_refresh_response)
+    data = adapter.get_token_data("resource_server_1")
+    assert data["access_token"] == "access_token_1"
+    data = adapter.get_token_data("resource_server_2")
+    assert data["access_token"] == "access_token_2_refreshed"
 
 
 @pytest.mark.xfail(IS_WINDOWS, reason="cannot set umask perms on Windows")
 def test_store_perms(filename, mock_response):
-    adapter = SimpleJSONFileAdapter(filename, resource_server="resource_server_1")
+    adapter = SimpleJSONFileAdapter(filename)
     assert not adapter.file_exists()
     adapter.store(mock_response)
 

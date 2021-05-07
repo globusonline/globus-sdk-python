@@ -70,9 +70,8 @@ CREATE TABLE sdk_storage_adapter_internal (
             # also mark the "database schema version" in case we ever need to handle
             # graceful upgrades
             conn.executemany(
-                """
-INSERT INTO sdk_storage_adapter_internal(attribute, value) VALUES (?, ?);
-            """,
+                "INSERT INTO sdk_storage_adapter_internal(attribute, value) "
+                "VALUES (?, ?)",
                 [
                     ("globus-sdk.version", __version__),
                     ("globus-sdk.database_schema_version", "1"),
@@ -93,10 +92,8 @@ INSERT INTO sdk_storage_adapter_internal(attribute, value) VALUES (?, ?);
         Uses sqlite "REPLACE" to perform the operation.
         """
         self._connection.execute(
-            """
-REPLACE INTO config_storage(namespace, config_name, config_data_json)
-VALUES (?, ?, ?)
-            """,
+            "REPLACE INTO config_storage(namespace, config_name, config_data_json) "
+            "VALUES (?, ?, ?)",
             (self.namespace, config_name, json.dumps(config_dict)),
         )
         self._connection.commit()
@@ -109,9 +106,8 @@ VALUES (?, ?, ?)
         If no value is found, returns None
         """
         row = self._connection.execute(
-            """
-SELECT config_data_json FROM config_storage WHERE namespace=? AND config_name=?
-        """,
+            "SELECT config_data_json FROM config_storage "
+            "WHERE namespace=? AND config_name=?",
             (self.namespace, config_name),
         ).fetchone()
 
@@ -132,9 +128,7 @@ SELECT config_data_json FROM config_storage WHERE namespace=? AND config_name=?
         Returns True if data was deleted, False if none was found to delete.
         """
         rowcount = self._connection.execute(
-            """
-DELETE FROM config_storage WHERE namespace=? AND config_name=?;
-            """,
+            "DELETE FROM config_storage WHERE namespace=? AND config_name=?",
             (self.namespace, config_name),
         ).rowcount
         self._connection.commit()
@@ -155,10 +149,8 @@ DELETE FROM config_storage WHERE namespace=? AND config_name=?;
             pairs.append((rs_name, token_data))
 
         self._connection.executemany(
-            """
-REPLACE INTO token_storage(namespace, resource_server, token_data_json)
-VALUES(?, ?, ?);
-            """,
+            "REPLACE INTO token_storage(namespace, resource_server, token_data_json) "
+            "VALUES(?, ?, ?)",
             [
                 (self.namespace, rs_name, json.dumps(token_data))
                 for (rs_name, token_data) in pairs
@@ -166,18 +158,41 @@ VALUES(?, ?, ?);
         )
         self._connection.commit()
 
-    def read_as_dict(self) -> typing.Dict[str, typing.Any]:
+    def get_token_data(
+        self, resource_server: str
+    ) -> typing.Optional[typing.Dict[str, typing.Any]]:
+        """
+        Load the token data JSON for a specific resource server.
+
+        In the event that the server cannot be found in the DB, return None.
+
+        :param resource_server: The name of a resource server to lookup in the DB, as
+            one would use as a key in OAuthTokenResponse.by_resource_server
+        """
+        for row in self._connection.execute(
+            "SELECT token_data_json FROM token_storage "
+            "WHERE namespace=? AND resource_server=?",
+            (self.namespace, resource_server),
+        ):
+            (token_data_json,) = row
+            val = json.loads(token_data_json)
+            if not isinstance(val, dict):
+                raise ValueError("data error: token data was not saved as a dict")
+            return val
+        return None
+
+    def get_by_resource_server(self) -> typing.Dict[str, typing.Any]:
         """
         Load the token data JSON and return the resulting dict objects, indexed by
         resource server.
+
         This should look identical to an OAuthTokenResponse.by_resource_server in format
         and content. (But it is not attached to a token response object.)
         """
         data = {}
         for row in self._connection.execute(
-            """
-SELECT resource_server, token_data_json FROM token_storage WHERE namespace=?
-        """,
+            "SELECT resource_server, token_data_json "
+            "FROM token_storage WHERE namespace=?",
             (self.namespace,),
         ):
             resource_server, token_data_json = row
@@ -192,11 +207,12 @@ SELECT resource_server, token_data_json FROM token_storage WHERE namespace=?
         as a dict, and then deleting the data for each resource server.
 
         Returns True if token data was deleted, False if none was found to delete.
+
+        :param resource_server: The name of the resource server to remove from the DB,
+            as one would use as a key in OAuthTokenResponse.by_resource_server
         """
         rowcount = self._connection.execute(
-            """
-DELETE FROM token_storage WHERE namespace=? AND resource_server=?;
-            """,
+            "DELETE FROM token_storage WHERE namespace=? AND resource_server=?",
             (self.namespace, resource_server),
         ).rowcount
         self._connection.commit()
